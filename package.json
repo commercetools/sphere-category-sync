@@ -1,0 +1,59 @@
+{
+  "name": "sphere-category-sync",
+  "description": "Import and export your category tree from/to your SPHERE.IO project.",
+  "version": "0.0.1",
+  "homepage": "https://github.com/sphereio/sphere-category-sync",
+  "private": true,
+  "author": {
+    "name": "Hajo Eichler",
+    "email": "hajo.eichler@commercetools.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sphereio/sphere-category-sync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sphereio/sphere-category-sync/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/sphereio/sphere-category-sync/blob/master/LICENSE-MIT"
+    }
+  ],
+  "bin": {
+    "category-sync": "bin/category-sync"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt coverage"
+  },
+  "dependencies": {
+    "csv": "0.3.7",
+    "sphere-node-client": "0.7.4",
+    "sphere-node-sync": "0.5.13",
+    "sphere-node-utils": "0.4.11",
+    "optimist": "0.6.1",
+    "prompt": "0.2.12",
+    "q": "1.0.1",
+    "underscore": "1.6.0",
+    "underscore.string": "2.3.3"
+  },
+  "devDependencies": {
+    "coveralls": "2.10.0",
+    "grunt": "0.4.4",
+    "grunt-bump": "0.0.13",
+    "grunt-coffeelint": "0.0.8",
+    "grunt-contrib-clean": "0.5.0",
+    "grunt-contrib-coffee": "0.10.1",
+    "grunt-contrib-concat": "0.4.0",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-shell": "0.6.4",
+    "istanbul": "0.2.7",
+    "jasmine-node": "1.14.0",
+    "sphere-coffeelint": "git://github.com/sphereio/sphere-coffeelint.git#master"
+  },
+  "keywords": []
+}
