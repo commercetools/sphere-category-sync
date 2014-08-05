@@ -15,13 +15,15 @@ This component allows you to manage the category tree of your SPHERE.IO project 
 * install [npm](http://gruntjs.com/getting-started) (NodeJS package manager, bundled with node since version 0.6.3!)
 * install [grunt-cli](http://gruntjs.com/getting-started) (automation tool)
 *  resolve dependencies using `npm`
-```bash
-$ npm install
-```
+
+  ```bash
+  $ npm install
+  ```
 * build javascript sources
-```bash
-$ grunt build
-```
+
+  ```bash
+  $ grunt build
+  ```
 
 ### From ZIP
 
