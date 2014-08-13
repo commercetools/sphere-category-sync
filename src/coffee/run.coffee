@@ -212,5 +212,7 @@ module.exports = class
               process.exit 1
             .done()
 
+    program.parse argv
+    program.help() if program.args.length is 0
 
 module.exports.run process.argv
