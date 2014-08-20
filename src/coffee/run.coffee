@@ -160,7 +160,7 @@ module.exports = class
       .option '-l, --languages [langs]', 'Language(s) used on export for category names (default is en)', 'en'
       .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret> --template <file>'
       .action (opts) ->
-        GLOBALS.DEFAULT_LANGUAGE = opts.language
+        GLOBALS.DEFAULT_LANGUAGE = opts.languages
 
         options =
           config:
