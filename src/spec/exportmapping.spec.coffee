@@ -14,6 +14,10 @@ describe 'ExportMapping', ->
       expect(@exportMapping).toBeDefined()
 
   describe '#mapCategories', ->
+    it 'should work with zero categories', ->
+      csv = @exportMapping.mapCategories []
+      expect(csv).toEqual []
+
     it 'should map a single category', ->
       categories = [
         id: '123'

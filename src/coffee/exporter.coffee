@@ -21,12 +21,9 @@ class Exporter
       exportMapping = new ExportMapping header
       @client.categories.all().fetch()
       .then (result) =>
-        if result.body.total is 0
-          deferred.resolve 'No categories found.'
-        else
-          console.log "Number of categories: #{result.body.total}."
-          csv = [ header.rawHeader ].concat exportMapping.mapCategories(result.body.results)
-          @_saveCSV(outputFile, csv)
+        console.log "Number of categories: #{result.body.total}."
+        csv = [ header.rawHeader ].concat exportMapping.mapCategories(result.body.results)
+        @_saveCSV(outputFile, csv)
     .then ->
       deferred.resolve 'Export done.'
     .fail (err) ->
