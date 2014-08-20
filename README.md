@@ -58,15 +58,40 @@ TODO
 
 ### CSV Format
 
+In general the CSV is built up of a header row and the content rows.
+The most import header is called `root`. It defines the column that contains the root categories. The columns right to it define the sub(sub)categories. On the left hand side of
+the `root` column you may find attributes like id, description, slug etc.
+
+#### Example
+
+```
+description,root,level1
+```
+
+#### Multilanguage support
+
 TODO
 
 ## Export
 
-TODO
+Using the export subcommand allows you to receive your category tree in a CSV file.
+The content of the output file is defined by a template that has to be passed as argument.
+Please refer to the CSV Format section whereas the header is the only relevant row for the template.
 
 ### Usage
 
 ```
 ./bin/category-sync export --help
+
+  Usage: export --projectKey <project-key> --clientId <client-id> --clientSecret <client-secret> --template <file>
+
+  Options:
+
+    -h, --help               output usage information
+    -t, --template <file>    CSV file containing your header that defines what you want to export
+    -o, --out <file>         Path to the file the exporter will write the resulting CSV in
+    -j, --json <file>        Path to the JSON file the exporter will write the resulting products
+    -q, --queryString        Query string to specify the sub-set of products to export. Please note that the query must be URL encoded!
+    -l, --languages [langs]  Language(s) used on export for category names (default is en)
 ```
 
