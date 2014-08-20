@@ -171,7 +171,7 @@ describe 'Header', ->
 
       @validator.parse csv
       .then ([header]) ->
-        expect(header.toRow(cat, 0)).toEqual [
+        expect(header.toRow(cat)).toEqual [
           '123', 'xyz', '2000-01-01T01:01:01.000Z', '2014-08-04T22:22:22.123Z', '0.5', 'myCat'
         ]
         done()
@@ -210,15 +210,19 @@ describe 'Header', ->
     it 'should create mapping for language attributes', (done) ->
       csv =
         """
-        foo,a1.de,bar,a1.it,root
+        foo,slug.de,bar,slug.it,root
         """
       @validator.parse csv
       .then ([header]) ->
-        langH2i = header._createLanguageIndex(['a1'])
+        langH2i = header._createLanguageIndex(['slug'])
         expect(_.size langH2i).toBe 1
-        expect(_.size langH2i['a1']).toBe 2
-        expect(langH2i['a1']['de']).toBe 1
-        expect(langH2i['a1']['it']).toBe 3
+        expect(_.size langH2i['slug']).toBe 2
+        expect(langH2i['slug']['de']).toBe 1
+        expect(langH2i['slug']['it']).toBe 3
+        expect(header.hasLanguageFor 'foo').toBe false
+        expect(header.hasLanguageFor 'bar').toBe false
+        expect(header.hasLanguageFor 'slug').toBe true
+        expect(header.toLanguageIndex 'slug').toEqual { de: 1, it: 3 }
         done()
       .fail (err) ->
         done(_.prettify err)

@@ -12,6 +12,21 @@ describe 'Validator', ->
       expect(@validator).toBeDefined()
 
   describe '#parse', ->
+    it 'should proper reject on parse failure', (done) ->
+      csv =
+        """
+        root
+        ""bad quoted content"
+        """
+      @validator.parse(csv)
+      .then (result) ->
+        done(_.prettify result)
+      .fail (err) ->
+        expect(err.message).toEqual 'Invalid closing quote at line 1; found "b" instead of delimiter ","'
+        done()
+      .done()
+
+
     it 'should return header and content', (done) ->
       csv =
         """
