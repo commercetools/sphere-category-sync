@@ -41,5 +41,5 @@ describe 'Export', ->
         expect(result).toBe 'Export done.'
         done()
       .fail (err) ->
-        done err
+        done _.prettify err
       .done()

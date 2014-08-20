@@ -17,7 +17,7 @@ class Exporter
     deferred = Q.defer()
     validator = new Validator()
     validator.parse(templateContent)
-    .then (header) =>
+    .then ([header]) =>
       exportMapping = new ExportMapping header
       @client.categories.all().fetch()
       .then (result) =>

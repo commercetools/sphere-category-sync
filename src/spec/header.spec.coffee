@@ -50,7 +50,7 @@ describe 'Header', ->
         slug,description,root
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.rootIndex).toBe 2
         done()
       .fail (err) ->
@@ -63,7 +63,7 @@ describe 'Header', ->
         root
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.rootLanguages).toEqual ['en']
         done()
       .fail (err) ->
@@ -76,7 +76,7 @@ describe 'Header', ->
         root.it
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.rootLanguages).toEqual ['it']
         done()
       .fail (err) ->
@@ -89,7 +89,7 @@ describe 'Header', ->
         root.de;it;en
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.rootLanguages).toEqual ['de', 'it', 'en']
         done()
       .fail (err) ->
@@ -117,7 +117,7 @@ describe 'Header', ->
         slug,description,root
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         h2i = header.toIndex()
         expect(_.size h2i).toBe 3
         expect(h2i['slug']).toBe 0
@@ -142,7 +142,7 @@ describe 'Header', ->
         slug,description,root
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.has('slug')).toBe true
         expect(header.has('description')).toBe true
         expect(header.has('root')).toBe true
@@ -170,7 +170,7 @@ describe 'Header', ->
           en: 'myCat'
 
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.toRow(cat, 0)).toEqual [
           '123', 'xyz', '2000-01-01T01:01:01.000Z', '2014-08-04T22:22:22.123Z', '0.5', 'myCat'
         ]
@@ -197,7 +197,7 @@ describe 'Header', ->
           de: 'Bla bla'
 
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         expect(header.toRow(cat, 2)).toEqual [
           '123', 'kategorie', 'Bla bla', 'my-cat', 'foo bar', undefined, undefined, 'myCat;Kategorie'
         ]
@@ -213,7 +213,7 @@ describe 'Header', ->
         foo,a1.de,bar,a1.it,root
         """
       @validator.parse csv
-      .then (header) ->
+      .then ([header]) ->
         langH2i = header._createLanguageIndex(['a1'])
         expect(_.size langH2i).toBe 1
         expect(_.size langH2i['a1']).toBe 2

@@ -25,7 +25,7 @@ class Validator
       header = new Header data[0]
       errors = header.validate()
       if _.size(errors) is 0
-        deferred.resolve header
+        deferred.resolve [ header, _.rest data ]
       else
         deferred.reject errors
 

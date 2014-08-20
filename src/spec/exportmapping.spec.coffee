@@ -1,4 +1,4 @@
-_ = require('underscore')._
+_ = require 'underscore'
 ExportMapping = require '../lib/exportmapping'
 Header = require '../lib/header'
 CONS = require '../lib/constants'
