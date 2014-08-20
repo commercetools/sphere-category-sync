@@ -22,7 +22,6 @@ class ExportMapping
         root.addSubCategory(new TreeNode(category))
       else
         current = root
-      # TODO: check order of ancestors!
         _.each category.ancestors, (ancestor) ->
           current = current.getSubCategory ancestor.id
         current.addSubCategory(new TreeNode(category))
