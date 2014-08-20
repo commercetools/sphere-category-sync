@@ -1,4 +1,4 @@
-Importer = require '../lib/import'
+Importer = require '../lib/importer'
 Exporter = require '../lib/exporter'
 package_json = require '../package.json'
 CONS = require '../lib/constants'
