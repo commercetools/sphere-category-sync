@@ -31,15 +31,18 @@
     "test": "grunt coverage"
   },
   "dependencies": {
+    "bluebird": "2.3.x",
     "csv": "0.3.7",
-    "sphere-node-client": "0.7.4",
-    "sphere-node-sync": "0.5.13",
-    "sphere-node-utils": "0.4.11",
+    "bunyan-logentries": "0.1.0",
+    "debug": "2.1.x",
     "optimist": "0.6.1",
     "prompt": "0.2.12",
-    "q": "1.0.1",
-    "underscore": "1.6.0",
-    "underscore.string": "2.3.3"
+    "sphere-node-sdk": "1.0.0-rc5",
+    "sphere-node-utils": "0.6.0",
+    "tmp": "0.0.23",
+    "underscore": "1.7.0",
+    "underscore.string": "2.3.3",
+    "underscore-mixins": "*"
   },
   "devDependencies": {
     "coveralls": "2.10.0",
