@@ -31,6 +31,7 @@
     "test": "grunt coverage"
   },
   "dependencies": {
+    "commander": "2.3.0",
     "csv": "0.3.7",
     "sphere-node-client": "0.7.4",
     "sphere-node-sync": "0.5.13",
