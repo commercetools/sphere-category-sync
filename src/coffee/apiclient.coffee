@@ -6,10 +6,9 @@ Promise = require 'bluebird'
 
 class ApiClient
 
-  constructor: (@logger, options = {}) ->
-    if options.config # for unit testing
-      # @sync = new CategorySync # TODO: enable as soon as new sdk released
-      @client = new SphereClient options
+  constructor: (@logger, options) ->
+    # @sync = new CategorySync # TODO: enable as soon as new sdk released
+    @client = new SphereClient options
 
     @continueOnProblems = false
     @updatesOnly = false
@@ -95,7 +94,7 @@ class ApiClient
             reject "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err}"
         .done()
 
-  deleteCategory: (category, context) ->
+  delete: (category, context) ->
     new Promise (resolve, reject) =>
       @client.categories.byId(category.id).delete(category.version)
       .then ->
