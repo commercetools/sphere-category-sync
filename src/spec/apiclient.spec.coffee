@@ -50,7 +50,7 @@ describe 'ApiClient', ->
         expect(err).toMatch /Error on creating new category/
         done()
 
-    it 'should resolve promise on data problems in continueOnProblems mode', (done) ->
+    it 'should reject promise on data problems', (done) ->
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
         new Promise (resolve, reject) -> reject({statusCode: 400})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
@@ -59,3 +59,14 @@ describe 'ApiClient', ->
       .catch (err) ->
         expect(err).toMatch /Problem on creating new category/
         done()
+
+    it 'should resolve promise on data problems in continueOnProblems mode', (done) ->
+      @apiClient.continueOnProblems = true
+      spyOn(@apiClient.client.categories, 'create').andCallFake ->
+        new Promise (resolve, reject) -> reject({statusCode: 400})
+      @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
+      .then (res) ->
+        expect(res).toMatch /ignored!/
+        done()
+      .catch (err) ->
+        done(err)
