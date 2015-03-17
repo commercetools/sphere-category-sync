@@ -90,9 +90,9 @@ module.exports = class
     program
       .command 'delete'
       .description 'Allows to delete (all) categories of your SPHERE.IO project.'
-      .option '--csv <file>', 'processes products defined in a CSV file by either "sku" or "id". Otherwise all products are processed.'
+      .option '--csv <file>', 'processes categories defined in a CSV file by either "sku" or "id". Otherwise all categories are processed.'
       .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret>'
-      .option '--continueOnProblems', "When a there is a problem on changing a product's state (400er response), ignore it and continue with the next products"
+      .option '--continueOnProblems', "When a there is a problem on deleting a category, ignore it and continue with the next category."
       .action (opts) ->
 
         credentialsConfig = ProjectCredentialsConfig.create()
@@ -127,7 +127,7 @@ module.exports = class
           prompt.start()
           property =
             name: 'ask'
-            message: 'Do you really want to delete products?'
+            message: 'Do you really want to delete categories?'
             validator: /y[es]*|n[o]?/
             warning: 'Please answer with yes or no'
             default: 'no'
@@ -152,11 +152,11 @@ module.exports = class
 
     program
       .command 'export'
-      .description 'Export your products from your SPHERE.IO project to CSV using.'
+      .description 'Export your categories from your SPHERE.IO project to CSV using.'
       .option '-t, --template <file>', 'CSV file containing your header that defines what you want to export'
       .option '-o, --out <file>', 'Path to the file the exporter will write the resulting CSV in'
-      .option '-j, --json <file>', 'Path to the JSON file the exporter will write the resulting products'
-      .option '-q, --queryString', 'Query string to specify the sub-set of products to export. Please note that the query must be URL encoded!', 'staged=true'
+      .option '-j, --json <file>', 'Path to the JSON file the exporter will write the resulting categories'
+      .option '-q, --queryString', 'Query string to specify the sub-set of categories to export. Please note that the query must be URL encoded!', 'staged=true'
       .option '-l, --languages [langs]', 'Language(s) used on export for category names (default is en)', 'en'
       .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret> --template <file>'
       .action (opts) ->
