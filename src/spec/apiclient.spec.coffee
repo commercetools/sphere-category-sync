@@ -70,3 +70,19 @@ describe 'ApiClient', ->
         done()
       .catch (err) ->
         done(err)
+
+  describe '#delete', ->
+    it 'should DELETE a category', ->
+      spyOn(@apiClient.client.categories, 'delete').andCallFake -> Promise.resolve()
+      @apiClient.delete { id: 'abc', version: 3 }, { sourceInfo: 'row 7' }
+      expect(@apiClient.client.categories.delete).toHaveBeenCalled()
+
+    it 'should reject promise on deletion problems', (done) ->
+      spyOn(@apiClient.client.categories, 'delete').andCallFake ->
+        new Promise (resolve, reject) -> reject({statusCode: 400})
+      @apiClient.delete({ id: 'abc', version: 3 }, { sourceInfo: 'none' })
+      .then (res) ->
+        done("deletion should end in problem, but: #{res}")
+      .catch (err) ->
+        expect(err).toMatch /Error on deleting category/
+        done()
