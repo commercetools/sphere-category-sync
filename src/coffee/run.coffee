@@ -31,7 +31,7 @@ module.exports = class
       .option '-c, --csv <file>', 'CSV file containing the category tree to import'
       .option '-l, --language [lang]', 'Default language for slug generation - default is en', 'en'
       .option '--csvDelimiter [delim]', 'CSV Delimiter that separates the cells (default is comma - ",")', ','
-      .option '--continueOnProblems', 'When a product does not validate on the server side (400er response), ignore it and continue with the next products'
+      .option '--continueOnProblems', 'When a category does not validate on the server side (400er response), ignore it and continue with the next category'
       .option '--dryRun', 'Will list all action that would be triggered, but will not POST them to SPHERE.IO'
       .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret> --csv <file>'
       .action (opts) ->
