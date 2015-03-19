@@ -7,61 +7,28 @@ Promise = require 'bluebird'
 class ApiClient
 
   constructor: (@logger, options) ->
-    # @sync = new CategorySync # TODO: enable as soon as new sdk released
+    @sync = new CategorySync options # TODO: enable as soon as new sdk released
     @client = new SphereClient options
 
     @continueOnProblems = false
     @updatesOnly = false
     @dryRun = false
 
-  processTree: (tree) ->
-    if _.size(tree.isEmpty()) is 0
-      Promise.resolve 'Nothing to do.'
-    else
-      posts = []
-      tree.traverse (category, context, index) =>
-        existingCategory = @matcher.match(category, context)
-        posts.push if existingCategory?
-          @update(category, existingCategory, context)
-        else
-          @create(category, context)
-
-      Promise.all posts
-
-  processStream: (chunk, cb) ->
-    @_processBatches(chunk).then -> cb()
-
-  _processBatches: (categories) ->
-    batchedList = _.batchList(categories, 10) # max
-    Promise.map batchedList, (catsToProcess) =>
-      @matcher.initialize catsToProcess, =>
-        Promise.all _.map catsToProcess, (category) =>
-          existingCategory = @matcher.match(category, context)
-          if existingCategory?
-            @update(category, existingCategory, context)
-          else
-            @create(category, context)
-
-    , {concurrency: 1} # run 1 batch at a time
-
   update: (category, existingCategory, context) ->
     new Promise (resolve, reject) =>
-      diff = @sync.buildActions(category, existingCategory)
-      #console.log "DIFF %j", diff.get()
+      actionsToSync = @sync.buildActions(category, existingCategory)
+      # console.log "Actions to Sync", actionsToSync.getUpdateActions()
 
-      if @dryRun
-        updates = diff.get()
-        if updates?
-          resolve "[#{context.sourceInfo}] DRY-RUN - updates for #{category.id}:\n#{_.prettify updates}"
-        else
-          resolve "[#{context.sourceInfo}] DRY-RUN - nothing to update."
+      if !actionsToSync.shouldUpdate()
+        resolve "[#{context.sourceInfo}] nothing to update."
+      else if @dryRun
+        resolve "[#{context.sourceInfo}] DRY-RUN - updates for category with id '#{actionsToSync.getUpdateId()}':\n#{_.prettify actionsToSync.getUpdateActions()}"
       else
-        diff.update()
+        @client.categories
+        .byId(actionsToSync.getUpdateId())
+        .update(actionsToSync.getUpdatePayload())
         .then (result) ->
-          if result.statusCode is 304
-            resolve "[#{context.sourceInfo}] Category update not necessary."
-          else
-            resolve "[#{context.sourceInfo}] Category updated."
+          resolve "[#{context.sourceInfo}] Category updated."
         .catch (err) =>
           if err.statusCode is 400
             msg = "[#{context.sourceInfo}] Problem on updating category:\n#{_.prettify err}"

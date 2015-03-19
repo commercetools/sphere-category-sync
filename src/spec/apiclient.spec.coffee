@@ -71,6 +71,60 @@ describe 'ApiClient', ->
       .catch (err) ->
         done(err)
 
+  describe '#update', ->
+    it 'should POST an category update', ->
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve( { statusCode: 200 } )
+      @apiClient.update { name: 'myCat' }, {}, { sourceInfo: 'row 7' }
+      expect(@apiClient.client.categories.update).toHaveBeenCalled()
+
+    it 'should resolve without differences', (done) ->
+      @apiClient.dryRun = true
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve()
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'myCat' }, { }
+      .then (res) ->
+        expect(res).toMatch /nothing to update./
+        done()
+      .catch (err) ->
+        done("Failed dryRun update:\n#{_.prettify err}")
+
+    it 'should resolve on dryRun with differences', (done) ->
+      @apiClient.dryRun = true
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve()
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      .then (res) ->
+        expect(res).toMatch /DRY-RUN - updates for category with id '123':/
+        done()
+      .catch (err) ->
+        done("Failed dryRun update:\n#{_.prettify err}")
+
+    it 'should reject on update errors', (done) ->
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 500 })
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      .then (res) ->
+        done(res)
+      .catch (err) ->
+        expect(err).toMatch /Error on updating category:/
+        done()
+
+    it 'should reject on update problems', (done) ->
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 400 })
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      .then (res) ->
+        done(res)
+      .catch (err) ->
+        expect(err).toMatch /Problem on updating category:/
+        done()
+
+    it 'should resolve with continueOnProblems on update problems', (done) ->
+      @apiClient.continueOnProblems = true
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 400 })
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      .then (res) ->
+        expect(res).toMatch /ignored!/
+        done()
+      .catch (err) ->
+        done(err)
+
   describe '#delete', ->
     it 'should DELETE a category', ->
       spyOn(@apiClient.client.categories, 'delete').andCallFake -> Promise.resolve()
