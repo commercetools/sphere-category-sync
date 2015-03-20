@@ -7,17 +7,23 @@ Promise = require 'bluebird'
 class ApiClient
 
   constructor: (@logger, options) ->
-    @sync = new CategorySync options # TODO: enable as soon as new sdk released
+    @sync = new CategorySync options
     @client = new SphereClient options
 
     @continueOnProblems = false
     @updatesOnly = false
     @dryRun = false
 
-  update: (category, existingCategory, context) ->
+  getByExternalIds: (externalIds) ->
+    get = @client.categories.all().whereOperator('or')
+    _.each externalIds, (eId) ->
+      get.where("externalId = \"#{eId}\"")
+    get.fetch()
+
+  update: (category, existingCategory, context = {}) ->
     new Promise (resolve, reject) =>
       actionsToSync = @sync.buildActions(category, existingCategory)
-      # console.log "Actions to Sync", actionsToSync.getUpdateActions()
+      debug "Actions to sync: ", actionsToSync.getUpdateActions()
 
       if !actionsToSync.shouldUpdate()
         resolve "[#{context.sourceInfo}] nothing to update."
@@ -38,9 +44,8 @@ class ApiClient
               reject msg
           else
             reject "[#{context.sourceInfo}] Error on updating category:\n#{_.prettify err}"
-        .done()
 
-  create: (category, context) ->
+  create: (category, context = {}) ->
     new Promise (resolve, reject) =>
       if @dryRun
         resolve "[#{context.sourceInfo}] DRY-RUN - create new category."
@@ -49,7 +54,7 @@ class ApiClient
       else
         @client.categories.create(category)
         .then (result) ->
-          resolve "[#{context.sourceInfo}] New category created."
+          resolve result
         .catch (err) =>
           if err.statusCode is 400
             msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err}"
@@ -59,16 +64,14 @@ class ApiClient
               reject msg
           else
             reject "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err}"
-        .done()
 
-  delete: (category, context) ->
+  delete: (category, context = {}) ->
     new Promise (resolve, reject) =>
       @client.categories.byId(category.id).delete(category.version)
       .then ->
         resolve "[#{context.sourceInfo}] Category deleted."
       .catch (err) ->
         reject "[#{context.sourceInfo}] Error on deleting category:\n#{_.prettify err}"
-      .done()
 
 
 module.exports = ApiClient
