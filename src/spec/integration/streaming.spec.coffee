@@ -1,6 +1,5 @@
 _ = require 'underscore'
 Streaming = require '../../lib/streaming'
-ApiClient = require '../../lib/apiclient'
 {ExtendedLogger} = require 'sphere-node-utils'
 package_json = require '../../package.json'
 Config = require '../../config'

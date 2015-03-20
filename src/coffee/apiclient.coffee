@@ -73,5 +73,4 @@ class ApiClient
       .catch (err) ->
         reject "[#{context.sourceInfo}] Error on deleting category:\n#{_.prettify err}"
 
-
 module.exports = ApiClient
