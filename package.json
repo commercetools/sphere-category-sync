@@ -24,8 +24,9 @@
   "bin": {
     "category-sync": "bin/category-sync"
   },
+  "main": "lib/streaming",
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.10.0"
   },
   "scripts": {
     "test": "grunt coverage"
