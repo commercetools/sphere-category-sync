@@ -13,9 +13,11 @@ class Streaming
 
   processStream: (chunk, cb) ->
     @_processBatches(chunk)
-    .then -> cb()
+    .then =>
+      @logger.info 'Chunk of stream processed'
+      cb()
     .catch (err) =>
-      @logger.warn err
+      @logger.error err
 
   _processBatches: (categories) ->
     @logger.info "Processing '#{_.size categories}' categor#{if _.size(categories) is 1 then 'y' else 'ies'}"
@@ -32,6 +34,7 @@ class Streaming
             , =>
               @apiClient.create(cat)
               .then (result) =>
+                # remember id of created category for faster parent match
                 @matcher.addMapping result.body
                 Promise.resolve result
         Promise.all posts
