@@ -63,5 +63,5 @@ describe 'Streaming', ->
         chunk = [
           { externalId: 'l1', name: { en: 'level1' }, slug: { en: 'l-1' }, parent: { id: 'root' }}
         ]
-        @streaming.processStream chunk, =>
+        @streaming.processStream chunk, ->
           done()
