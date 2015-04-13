@@ -1,7 +1,7 @@
 {
   "name": "sphere-category-sync",
   "description": "Import and export your category tree from/to your SPHERE.IO project.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/sphereio/sphere-category-sync",
   "private": true,
   "author": {
@@ -32,18 +32,21 @@
     "test": "grunt coverage"
   },
   "dependencies": {
-    "bluebird": "2.3.x",
-    "csv": "0.3.7",
+    "bluebird": "2.9.5",
+    "csv": "0.4.1",
     "bunyan-logentries": "0.1.0",
-    "debug": "2.1.x",
+    "debug": "2.1.3",
+    "highland": "2.4.x",
     "optimist": "0.6.1",
-    "prompt": "0.2.12",
-    "sphere-node-sdk": "1.3.0",
+    "prompt": "0.2.14",
+    "sphere-node-sdk": "1.3.3",
     "sphere-node-utils": "0.6.0",
-    "tmp": "0.0.23",
-    "underscore": "1.7.0",
-    "underscore.string": "2.3.3",
-    "underscore-mixins": "*"
+    "stream-transform": "0.0.7",
+    "tmp": "0.0.25",
+    "underscore": "1.8.2",
+    "underscore.string": "3.0.3",
+    "underscore-mixins": "0.1.3",
+    "yargs": "3.6.0"
   },
   "devDependencies": {
     "coveralls": "2.10.0",
