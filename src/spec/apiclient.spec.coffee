@@ -1,6 +1,7 @@
 _ = require 'underscore'
 ApiClient = require '../lib/apiclient'
 Promise = require 'bluebird'
+{ExtendedLogger} = require 'sphere-node-utils'
 
 describe 'ApiClient', ->
   beforeEach ->
@@ -9,7 +10,8 @@ describe 'ApiClient', ->
         project_key: 'p'
         client_id: 'i'
         client_secret: 's'
-    @apiClient = new ApiClient null, options
+    @logger = new ExtendedLogger
+    @apiClient = new ApiClient @logger, options
 
   describe '#constructor', ->
     it 'should initialize', ->

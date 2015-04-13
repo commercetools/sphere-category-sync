@@ -21,6 +21,7 @@ class ApiClient
     get.fetch()
 
   update: (category, existingCategory, context = {}) ->
+    @logger.debug "performing update"
     new Promise (resolve, reject) =>
       actionsToSync = @sync.buildActions(category, existingCategory)
       debug "Actions to sync: ", actionsToSync.getUpdateActions()
@@ -37,15 +38,18 @@ class ApiClient
           resolve "[#{context.sourceInfo}] Category updated."
         .catch (err) =>
           if err.statusCode is 400
-            msg = "[#{context.sourceInfo}] Problem on updating category:\n#{_.prettify err}"
+            msg = "[#{context.sourceInfo}] Problem on updating category:\n#{_.prettify err} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
             if @continueOnProblems
               resolve "#{msg} - ignored!"
             else
               reject msg
           else
-            reject "[#{context.sourceInfo}] Error on updating category:\n#{_.prettify err}"
+            msg = "[#{context.sourceInfo}] Error on updating category:\n#{_.prettify err} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
+            @logger.error msg
+            reject msg
 
   create: (category, context = {}) ->
+    @logger.debug "performing create"
     new Promise (resolve, reject) =>
       if @dryRun
         resolve "[#{context.sourceInfo}] DRY-RUN - create new category."
@@ -57,13 +61,15 @@ class ApiClient
           resolve result
         .catch (err) =>
           if err.statusCode is 400
-            msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err}"
+            msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err} - payload: #{_.prettify category}"
             if @continueOnProblems
               resolve "#{msg} - ignored!"
             else
               reject msg
           else
-            reject "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err}"
+            msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err} - payload: #{_.prettify category}"
+            @logger.error msg
+            reject msg
 
   delete: (category, context = {}) ->
     new Promise (resolve, reject) =>
