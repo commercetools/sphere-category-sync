@@ -21,11 +21,12 @@ class ImportMapping extends Header
 
   handleHeader: (header, index) ->
     if _.isUndefined(@index2JsonFn[index])
-      @index2JsonFn[index] = if header is CONS.PARENT_ID
+      @index2JsonFn[index] = if header is CONS.HEADER_PARENT_ID
         (row, json) ->
-          json[header] =
-            type: 'category'
-            id: row[header]
+          if row[header]
+            json['parent'] =
+              type: 'category'
+              id: row[header]
       else
         (row, json) ->
           json[header] = row[header]

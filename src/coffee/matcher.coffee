@@ -28,6 +28,7 @@ class Matcher
       if category.parent
         parentId = @externalId2IdMap[category.parent.id]
         if parentId
+          @logger.info "Found parent: #{parentId}"
           category.parent.id = parentId
           category.parent.typeId = 'category'
           resolve category

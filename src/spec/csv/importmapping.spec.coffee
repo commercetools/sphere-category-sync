@@ -8,7 +8,7 @@ describe 'ImportMapping', ->
       expect(-> new ImportMapping()).toBeDefined()
 
   describe '#validate', ->
-    it 'should add a function for normal simple header entry', ->
+    it 'should map a simple entry', ->
       im = new ImportMapping [ 'id' ]
       im.validate()
       expect(_.size im.index2JsonFn).toBe 1
@@ -18,7 +18,28 @@ describe 'ImportMapping', ->
       expect(json).toEqual
         id: 'foo'
 
-    it 'should add a function for localized header entry', ->
+    it 'should map parentId entry', ->
+      im = new ImportMapping [ 'parentId' ]
+      im.validate()
+      expect(_.size im.index2JsonFn).toBe 1
+      expect(_.isFunction(im.index2JsonFn[0])).toBe true
+      json = im.toJSON
+        parentId: 'root'
+      expect(json).toEqual
+        parent:
+          type: 'category'
+          id: 'root'
+
+    it 'should not map empty parentId entry', ->
+      im = new ImportMapping [ 'parentId' ]
+      im.validate()
+      expect(_.size im.index2JsonFn).toBe 1
+      expect(_.isFunction(im.index2JsonFn[0])).toBe true
+      json = im.toJSON
+        parentId: ''
+      expect(json).toEqual {}
+
+    it 'should map a localized entry', ->
       im = new ImportMapping [ 'slug.it' ]
       im.validate()
       expect(_.size im.index2JsonFn).toBe 1
