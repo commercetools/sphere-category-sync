@@ -10,8 +10,8 @@ before_script:
 - gem install cucumber aruba
 script:
 - npm test
-#- cucumber -t ~@wip
-#- node lib/run import --projectKey ${SPHERE_PROJECT_KEY} --clientId ${SPHERE_CLIENT_ID} --clientSecret ${SPHERE_CLIENT_SECRET} --csv data/minimum-header.csv
+- cucumber -t ~@wip
+- ./bin/category-sync -p ${SPHERE_PROJECT_KEY} import -f data/minimum-header.csv
 notifications:
   hipchat:
     rooms:
