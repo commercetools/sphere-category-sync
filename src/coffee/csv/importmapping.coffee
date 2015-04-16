@@ -20,7 +20,7 @@ class ImportMapping extends Header
       json[attribName][language] = row[header]
 
   handleHeader: (header, index) ->
-    if _.isUndefined(@index2JsonFn[index])
+    if _.isUndefined @index2JsonFn[index]
       @index2JsonFn[index] = if header is CONS.HEADER_PARENT_ID
         (row, json) ->
           if row[header]
