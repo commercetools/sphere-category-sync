@@ -28,7 +28,7 @@ class Matcher
       if category.parent
         parentId = @externalId2IdMap[category.parent.id]
         if parentId
-          @logger.info "Found parent: #{parentId}"
+          @logger.info "Found parent for id '#{category.parent.id}'."
           category.parent.id = parentId
           category.parent.typeId = 'category'
           resolve category
@@ -43,7 +43,7 @@ class Matcher
       cat = _.find @currentCandidates, (candidate) ->
         candidate.externalId is category.externalId
       if cat
-        @logger.info "Found match: #{cat}"
+        @logger.info "Found match with externalId '#{cat.externalId}'."
         @addMapping category
         resolve cat
       else

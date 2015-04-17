@@ -15,10 +15,10 @@ Feature: Import categories
     Given a file named "simple-tree.csv" with:
     """
     externalId,name.en,slug.en,parentId
-    root2,Root Category,root-category,
-    sub2,Sub Category,sub-categorty,root2
+    rootCat,Root Category,root-category,
+    subCat,Sub Category,sub-categorty,rootCat
     """
     When I run `../../bin/category-sync -p import-101-64 import -f simple-tree.csv`
     Then the exit status should be 0
-    And the output should contain "Found parent"
+    And the output should contain "Found parent for id 'rootCat'."
     And the output should contain "Import done."
