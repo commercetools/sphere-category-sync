@@ -1,5 +1,5 @@
 Importer = require '../lib/csv/importer'
-#Exporter = require '../lib/exporter'
+Exporter = require '../lib/csv/exporter'
 package_json = require '../package.json'
 {ProjectCredentialsConfig,ExtendedLogger} = require 'sphere-node-utils'
 
@@ -73,6 +73,10 @@ ProjectCredentialsConfig.create()
     .describe 'o', 'CSV output file name'
     .nargs 'o', 1
     .alias 'o', 'output'
+
+    ex = new Exporter logger,
+      config: credentials
+    ex.export argv.t, argv.o
 
   else
     yargs.showHelp()
