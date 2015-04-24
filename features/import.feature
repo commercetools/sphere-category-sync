@@ -1,5 +1,11 @@
 Feature: Import categories
 
+  @wip
+  Scenario: Error on wrong file
+    When I run `../../bin/category-sync -p import-101-64 import -f not_here.csv`
+    Then the exit status should be 1
+    And the output should contain "Error: ENOENT, open 'not_here.csv'"
+
   Scenario: Import a single category from a CSV file
     Given a file named "single.csv" with:
     """
@@ -16,7 +22,7 @@ Feature: Import categories
     """
     externalId,name.en,slug.en,parentId
     rootCat,Root Category,root-category,
-    subCat,Sub Category,sub-categorty,rootCat
+    subCat,Sub Category,sub-category,rootCat
     """
     When I run `../../bin/category-sync -p import-101-64 import -f simple-tree.csv`
     Then the exit status should be 0

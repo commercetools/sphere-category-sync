@@ -1,8 +1,9 @@
 Feature: Export categories
 
   Scenario: Error on wrong template file
-    When I run `../../bin/category-sync -p import-101-64 export -t nothere.csv -o output.csv`
-    Then the exit status should be 8
+    When I run `../../bin/category-sync -p import-101-64 export -t not_here.csv -o output.csv`
+    Then the exit status should be 1
+    And the output should contain "Error: ENOENT, open 'not_here.csv'"
 
   Scenario: Error on unwriteable output
     Given a file named "template.csv" with:
@@ -10,7 +11,8 @@ Feature: Export categories
     id
     """
     When I run `../../bin/category-sync -p import-101-64 export -t template.csv -o /output.csv`
-    Then the exit status should be 8
+    Then the exit status should be 1
+    And the output should contain "Error: EACCES, open '/output.csv'"
 
   Scenario: Export category to a CSV file
     Given a file named "single.csv" with:
