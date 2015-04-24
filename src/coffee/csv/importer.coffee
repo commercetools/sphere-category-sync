@@ -16,7 +16,8 @@ class Importer
       delimiter: ','
       columns: (rawHeader) =>
         @mapping = new ImportMapping rawHeader
-        @mapping.validate() # TODO: handle errors
+        errors = @mapping.validate()
+        throw { errors } if _.size errors
         rawHeader
     parser.on 'error', (error) =>
       @logger.error error

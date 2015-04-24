@@ -1,4 +1,3 @@
-debug = require('debug')('sphere-category-sync')
 _ = require 'underscore'
 Promise = require 'bluebird'
 

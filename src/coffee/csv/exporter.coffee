@@ -29,23 +29,33 @@ class Exporter
       parser.on 'finish', =>
         resolve 'Header loaded.'
 
-      fs.createReadStream(fileName).pipe(parser)
+      stream = fs.createReadStream(fileName)
+      stream.on 'error', (error) =>
+        reject error
+
+      stream.pipe(parser)
 
   export: (templateFileName, outPutFileName) ->
-    @stream = fs.createWriteStream outPutFileName
+    new Promise (resolve, reject) =>
+      @stream = fs.createWriteStream outPutFileName
+      @stream.on 'error', (error) =>
+        reject error
 
-    @loadTemplate templateFileName
-    .then () =>
+      @loadTemplate templateFileName
+      .catch (error) =>
+        reject error
+      .then () =>
 
-      processChunk = (payload) =>
-        new Promise (resolve, reject) =>
-          rows = _.map payload.body.results, (category) =>
-            row = @mapping.toCSV category
-          @write rows
+        processChunk = (payload) =>
+          new Promise (resolve, reject) =>
+            rows = _.map payload.body.results, (category) =>
+              row = @mapping.toCSV category
+            @write rows
 
-      @client.categories.process(processChunk)
-      .then (result) ->
-        @stream.end()
+        @client.categories.process(processChunk)
+        .then (result) ->
+          @stream.end()
+          resolve result
 
   write: (output) ->
     stringify output, (err, out) =>
