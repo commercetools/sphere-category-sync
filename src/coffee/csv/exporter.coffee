@@ -38,7 +38,9 @@ class Exporter
   export: (templateFileName, outPutFileName) ->
     new Promise (resolve, reject) =>
       @stream = fs.createWriteStream outPutFileName
-      @stream.on 'error', (error) =>
+      @stream.on 'finish', =>
+        resolve 'OK'
+      @stream.on 'error', (error) ->
         reject error
 
       @loadTemplate templateFileName
@@ -47,18 +49,22 @@ class Exporter
       .then () =>
 
         processChunk = (payload) =>
+          @logger.info "Processing #{_.size payload.body.results} categories"
           new Promise (resolve, reject) =>
             rows = _.map payload.body.results, (category) =>
               row = @mapping.toCSV category
             @write rows
+            .then (result) ->
+              resolve result
 
-        @client.categories.process(processChunk)
-        .then (result) ->
+        @client.categories.all().process(processChunk)
+        .then (result) =>
           @stream.end()
-          resolve result
 
   write: (output) ->
-    stringify output, (err, out) =>
-      @stream.write out
+    new Promise (resolve, reject) =>
+      stringify output, (err, out) =>
+        @stream.write out
+        resolve 'OK'
 
 module.exports = Exporter
