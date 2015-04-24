@@ -76,13 +76,13 @@ describe 'ApiClient', ->
   describe '#update', ->
     it 'should POST an category update', ->
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve( { statusCode: 200 } )
-      @apiClient.update { name: 'myCat' }, {}, { sourceInfo: 'row 7' }
+      @apiClient.update { name: 'myCat' }, {}, [], { sourceInfo: 'row 7' }
       expect(@apiClient.client.categories.update).toHaveBeenCalled()
 
     it 'should resolve without differences', (done) ->
       @apiClient.dryRun = true
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve()
-      @apiClient.update { name: 'myCat' }, { id: '123', name: 'myCat' }, { }
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'myCat' }
       .then (res) ->
         expect(res).toMatch /nothing to update./
         done()
@@ -92,7 +92,7 @@ describe 'ApiClient', ->
     it 'should resolve on dryRun with differences', (done) ->
       @apiClient.dryRun = true
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve()
-      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         expect(res).toMatch /DRY-RUN - updates for category with id '123':/
         done()
@@ -101,7 +101,7 @@ describe 'ApiClient', ->
 
     it 'should reject on update errors', (done) ->
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 500 })
-      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         done(res)
       .catch (err) ->
@@ -110,7 +110,7 @@ describe 'ApiClient', ->
 
     it 'should reject on update problems', (done) ->
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 400 })
-      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         done(res)
       .catch (err) ->
@@ -120,12 +120,22 @@ describe 'ApiClient', ->
     it 'should resolve with continueOnProblems on update problems', (done) ->
       @apiClient.continueOnProblems = true
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 400 })
-      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }, { }
+      @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         expect(res).toMatch /ignored!/
         done()
       .catch (err) ->
         done(err)
+
+    it 'should filter action', (done) ->
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve( { statusCode: 200 })
+      @apiClient.update { name: 'myCat' }, { name: 'otherCat', orderHint: '0.1', version: 1 }, [ 'changeOrderHint' ]
+      .then (res) =>
+        expect(@apiClient.client.categories.update).toHaveBeenCalledWith { actions: [ { action: 'changeName', name: 'myCat' } ], version: 1 }
+        done()
+      .catch (err) ->
+        done(err)
+
 
   describe '#delete', ->
     it 'should DELETE a category', ->
