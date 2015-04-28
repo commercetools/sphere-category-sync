@@ -9,6 +9,7 @@ class Streaming
   constructor: (@logger, options) ->
     @apiClient = new ApiClient @logger, options
     @matcher = new Matcher @logger, @apiClient
+    @actionsToIgnore = options.actionsToIgnore
 
   processStream: (chunk, cb) ->
     @_processBatches(chunk)
@@ -29,7 +30,7 @@ class Streaming
           .then (cat) =>
             @matcher.match(cat)
             .then (existingCategory) =>
-              @apiClient.update(cat, existingCategory)
+              @apiClient.update(cat, existingCategory, @actionsToIgnore)
             , =>
               @apiClient.create(cat)
               .then (result) =>

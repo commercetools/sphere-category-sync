@@ -19,13 +19,13 @@ class ApiClient
       get.where("externalId = \"#{eId}\"")
     get.fetch()
 
-  update: (category, existingCategory, attributesToIgnore = [], context = {}) ->
+  update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
     @logger.debug "performing update"
     new Promise (resolve, reject) =>
       actionsToSync = @sync
       .buildActions(category, existingCategory)
       .filterActions (action) ->
-        not _.contains(attributesToIgnore, action.action)
+        not _.contains(actionsToIgnore, action.action)
 
       @logger.debug "Actions to sync: ", actionsToSync.getUpdateActions()
 
