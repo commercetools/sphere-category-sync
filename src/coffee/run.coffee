@@ -59,6 +59,8 @@ ProjectCredentialsConfig.create()
     im = new Importer logger,
       config: credentials
     im.run argv.f
+    .then (result) ->
+      logger.info result
 
   else if command is 'export'
     yargs.reset()
