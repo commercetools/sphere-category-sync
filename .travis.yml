@@ -12,7 +12,6 @@ before_script:
 script:
 - npm test
 - cucumber -t ~@wip
-- ./bin/category-sync -p ${SPHERE_PROJECT_KEY} import -f data/minimum-header.csv
 notifications:
   hipchat:
     rooms:
