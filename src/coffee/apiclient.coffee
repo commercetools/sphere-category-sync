@@ -14,10 +14,10 @@ class ApiClient
     @dryRun = false
 
   getByExternalIds: (externalIds) ->
-    get = @client.categories.all().whereOperator('or')
-    _.each externalIds, (eId) ->
-      get.where("externalId = \"#{eId}\"")
-    get.fetch()
+    @client.categories
+    .all()
+    .query("externalId in #{externalIds.join(', ')}")
+    .fetch()
 
   update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
     @logger.debug "performing update"
