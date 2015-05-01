@@ -13,7 +13,7 @@ yargs = require 'yargs'
   .alias 'i', 'client-id'
 
   .describe 's', 'client secret'
-  .alias 's', 'client secret'
+  .alias 's', 'client-secret'
 
   .command 'export', 'Export categories'
   .command 'import', 'Import categories'
