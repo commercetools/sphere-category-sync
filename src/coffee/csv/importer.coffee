@@ -5,6 +5,7 @@ csv = require 'csv'
 transform = require 'stream-transform'
 ImportMapping = require './importmapping'
 Streaming = require '../streaming'
+Promise = require 'bluebird'
 
 class Importer
 
@@ -12,29 +13,34 @@ class Importer
     @streaming = new Streaming @logger, options
 
   import: (fileName) ->
-    parser = csv.parse
-      delimiter: ','
-      columns: (rawHeader) =>
-        @mapping = new ImportMapping rawHeader
-        errors = @mapping.validate()
-        throw { errors } if _.size errors
-        rawHeader
-    parser.on 'error', (error) =>
-      @logger.error error
-    parser.on 'finish', =>
-      @logger.info "Import done."
+    new Promise (resolve, reject) =>
+      input = fs.createReadStream fileName
+      input.on 'error', (error) ->
+        reject error
 
-    transformer = transform (row, callback) =>
-      category = @createCategory row
-      callback null, category
-    , {parallel: 10}
+      parser = csv.parse
+        delimiter: ','
+        columns: (rawHeader) =>
+          @mapping = new ImportMapping rawHeader
+          errors = @mapping.validate()
+          throw { errors } if _.size errors
+          rawHeader
+      parser.on 'error', (error) ->
+        reject error
+      parser.on 'finish', ->
+        input.end()
+        resolve 'Import done.'
 
-    input = fs.createReadStream fileName
-    __(input).pipe(parser).pipe(transformer).pipe(
-      transform (chunk, cb) =>
-        @logger.debug 'chunk: ', chunk, {}
-        @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
-      , {parallel: 1})
+      transformer = transform (row, callback) =>
+        category = @createCategory row
+        callback null, category
+      , {parallel: 10}
+
+      __(input).pipe(parser).pipe(transformer).pipe(
+        transform (chunk, cb) =>
+          @logger.debug 'chunk: ', chunk, {}
+          @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
+        , {parallel: 1})
 
   createCategory: (row) ->
     @logger.debug 'create JSON category for row: ', row
