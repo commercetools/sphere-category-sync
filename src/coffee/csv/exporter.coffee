@@ -57,7 +57,7 @@ class Exporter
             .then (result) ->
               resolve result
 
-        @client.categories.all().process(processChunk)
+        @client.categories.all().process(processChunk, {accumulate: false})
         .then (result) =>
           @stream.end()
 
