@@ -58,7 +58,7 @@ ProjectCredentialsConfig.create()
 
     im = new Importer logger,
       config: credentials
-    im.import argv.f
+    im.run argv.f
 
   else if command is 'export'
     yargs.reset()
@@ -76,7 +76,7 @@ ProjectCredentialsConfig.create()
 
     ex = new Exporter logger,
       config: credentials
-    ex.export argv.t, argv.o
+    ex.run argv.t, argv.o
 
   else
     yargs.showHelp()

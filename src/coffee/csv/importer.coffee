@@ -12,7 +12,7 @@ class Importer
   constructor: (@logger, options = {}) ->
     @streaming = new Streaming @logger, options
 
-  import: (fileName) ->
+  run: (fileName) ->
     new Promise (resolve, reject) =>
       input = fs.createReadStream fileName
       input.on 'error', (error) ->

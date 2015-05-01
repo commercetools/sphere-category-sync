@@ -35,7 +35,7 @@ class Exporter
 
       stream.pipe(parser)
 
-  export: (templateFileName, outPutFileName) ->
+  run: (templateFileName, outPutFileName) ->
     new Promise (resolve, reject) =>
       @stream = fs.createWriteStream outPutFileName
       @stream.on 'finish', ->
