@@ -24,13 +24,13 @@ class Exporter
           throw { errors } if _.size errors
           @write [rawHeader] # pass array of array to ensure newline in CSV
           rawHeader
-      parser.on 'error', (error) =>
+      parser.on 'error', (error) ->
         reject error
-      parser.on 'finish', =>
+      parser.on 'finish', ->
         resolve 'Header loaded.'
 
-      stream = fs.createReadStream(fileName)
-      stream.on 'error', (error) =>
+      stream = fs.createReadStream fileName
+      stream.on 'error', (error) ->
         reject error
 
       stream.pipe(parser)
@@ -38,15 +38,15 @@ class Exporter
   export: (templateFileName, outPutFileName) ->
     new Promise (resolve, reject) =>
       @stream = fs.createWriteStream outPutFileName
-      @stream.on 'finish', =>
-        resolve 'OK'
+      @stream.on 'finish', ->
+        resolve 'Export done.'
       @stream.on 'error', (error) ->
         reject error
 
       @loadTemplate templateFileName
-      .catch (error) =>
+      .catch (error) ->
         reject error
-      .then () =>
+      .then =>
 
         processChunk = (payload) =>
           @logger.info "Processing #{_.size payload.body.results} categories"
