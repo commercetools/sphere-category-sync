@@ -14,9 +14,10 @@ class ApiClient
     @dryRun = false
 
   getByExternalIds: (externalIds) ->
+    quotedIds = _.map externalIds, (id) -> "\"#{id}\""
     @client.categories
     .all()
-    .where("externalId in (\"#{externalIds.join('", "')}\")")
+    .where("externalId in (#{quotedIds.join(', ')})")
     .fetch()
 
   update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
