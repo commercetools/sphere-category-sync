@@ -44,10 +44,9 @@ class Matcher
       if cat
         @logger.info "Found match with externalId '#{cat.externalId}'."
         @addMapping category
-        resolve cat
       else
         msg = "No match found for category with external id '#{category.externalId}'"
         @logger.info msg
-        reject msg
+      resolve cat
 
 module.exports = Matcher

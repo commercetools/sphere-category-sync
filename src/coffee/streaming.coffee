@@ -30,13 +30,14 @@ class Streaming
           .then (cat) =>
             @matcher.match(cat)
             .then (existingCategory) =>
-              @apiClient.update(cat, existingCategory, @actionsToIgnore)
-            , =>
-              @apiClient.create(cat)
-              .then (result) =>
-                # remember id of created category for faster parent match
-                @matcher.addMapping result.body
-                Promise.resolve result
+              if existingCategory
+                @apiClient.update(cat, existingCategory, @actionsToIgnore)
+              else
+                @apiClient.create(cat)
+                .then (result) =>
+                  # remember id of created category for faster parent match
+                  @matcher.addMapping result.body
+                  Promise.resolve result
         Promise.all posts
 
     , {concurrency: 1} # run 1 batch at a time
