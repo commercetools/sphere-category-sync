@@ -45,3 +45,29 @@ describe 'ApiClient', ->
           done()
       .catch (err) ->
         done err
+
+  describe '#resolveParent', ->
+    it 'should not resolve parent when no parentId given', (done) ->
+      @matcher.resolveParent { }
+      .then (result) ->
+        expect(result.parent).toBeUndefined()
+        done()
+      .catch (err) ->
+        done err
+
+    it 'should not resolve parent for unkown parentId', (done) ->
+      @matcher.resolveParent { parent: { id: 'externalId123' } }
+      .then (result) ->
+        done 'Should not resolve if parentId not found'
+      .catch (err) ->
+        done()
+
+    it 'should resolve parent when mapping added before', (done) ->
+      @matcher.addMapping { externalId: 'ex77', id: 'id77'  }
+      @matcher.resolveParent { parent: { id: 'ex77' } }
+      .then (result) ->
+        expect(result.parent.id).toBe 'id77'
+        expect(result.parent.typeId).toBe 'category'
+        done()
+      .catch (err) ->
+        done err
