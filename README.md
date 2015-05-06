@@ -62,17 +62,18 @@ Please have a look at the [CSV Format section](#csv-format) for the different he
 
 The command line to export categories into a CSV file is:
 ```bash
-Usage: bin/category-sync -p <project-key> export -t <CSV template> -o <CSV output file>
+Usage: bin/category-sync -p <project-key> [options] export -t <CSV file> -o <CSV file>
 
 Options:
-  -t, --template  CSV template file name                        [required]
-  -o, --output    CSV output file name                          [required]
+  -t, --template  CSV template file name                              [required]
+  -o, --output    CSV output file name                                [required]
 
 Examples:
--p my-project-42 export -t header.csv -o output.csv
-  bin/category-sync -p my-project-42       Export categories from SPHERE project
-  export -t header.csv -o output.csv       with key "my-project-42" into "output.csv"
-                                           file using the template "header.csv".
+  bin/category-sync -p my-project-42          Export categories from SPHERE
+  export -t header.csv -o output.csv          project with key "my-project-42"
+                                              into "output.csv" file using the
+                                              template "header.csv".
+```
 
 ## CSV Format
 

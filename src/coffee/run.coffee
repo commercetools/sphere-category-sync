@@ -64,7 +64,7 @@ ProjectCredentialsConfig.create()
 
   else if command is 'export'
     yargs.reset()
-    .usage 'Usage: $0 -p <project-key> [options] export -t <CSV file> [arguments]'
+    .usage 'Usage: $0 -p <project-key> [options] export -t <CSV file> -o <CSV file>'
     .example '$0 -p my-project-42 export -t header.csv -o output.csv', 'Export categories from SPHERE project with key "my-project-42" into "output.csv" file using the template "header.csv".'
 
     .describe 't', 'CSV template file name'
@@ -75,6 +75,8 @@ ProjectCredentialsConfig.create()
     .describe 'o', 'CSV output file name'
     .nargs 'o', 1
     .alias 'o', 'output'
+    .demand 'o'
+    .argv
 
     ex = new Exporter logger,
       config: credentials
