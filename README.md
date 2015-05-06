@@ -8,7 +8,7 @@ This component allows you to manage the category tree of your SPHERE.IO project 
 
 # Usage
 
-In general the command used sub-commands for the different tasks.
+In general the command uses sub-commands for the different tasks.
 - [import and update](#import)
 - [export](#export)
 
@@ -30,7 +30,7 @@ Options:
 ```
 The tool uses the API to talk to SPHERE.IO and therefore needs the 3 access properties - `project key`, `client id` and `client secret`. For automation reason you may use our [project credentials files](https://github.com/sphereio/sphere-node-utils#projectcredentialsconfig) to avoid passing the credentials via command line options.
 
-When you provide a wrong argument or there is one missing the tool will inform you. Please have a look at the last line of the output. You might find some useful hints like this one:
+When you provide a wrong argument or one argument is missing the tool will inform you. Please have a look at the last line of the output. You might find some useful hints like this one:
 ```
 Missing required arguments: p
 ```
@@ -50,7 +50,7 @@ Examples:
                                               project with key "my-project-42".
 ```
 
-During import we match categories to existing categories according to the `externalId`. If a category with the same `externalId` is found we talk about an update as the tool will then update the existings category properties - like name etc. - to those values defined in the CSV file.
+During import we match categories to existing categories according to the `externalId`. If a category with the same `externalId` is found we will call it an update as the tool will then update the existing category properties - like name etc. - to those values defined in the CSV file.
 If no matching category is found the tool will create a new one.
 The `import` sub-command will never delete a category.
 
