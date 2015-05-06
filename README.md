@@ -13,7 +13,7 @@ In general the command used sub-commands for the different tasks.
 - [export](#export)
 
 Base options are:
-```bash
+```
 ./bin/category-sync
 Usage: bin/category-sync <command> [options]
 
@@ -38,7 +38,7 @@ Missing required arguments: p
 ## Import
 
 The command line to import or update categories is shown below:
-```bash
+```
 Usage: bin/category-sync -p <project-key> import -f <CSV file>
 
 Options:
@@ -61,7 +61,7 @@ This will allow you to define the content of the output file to your specific ne
 Please have a look at the [CSV Format section](#csv-format) for the different headers supported.
 
 The command line to export categories into a CSV file is:
-```bash
+```
 Usage: bin/category-sync -p <project-key> [options] export -t <CSV file> -o <CSV file>
 
 Options:
@@ -110,6 +110,7 @@ Different languages for the same attribute are defined by a suffix to the actual
 
 * Clone this repository and change into the directory
 * Install all necessary dependencies with
+
   ```bash
   npm install
   ```
@@ -119,10 +120,12 @@ Different languages for the same attribute are defined by a suffix to the actual
   npm run build
   ```
 * To run the test do:
+
   ```bash
   npm test
   ```
 * To run the tests on each change you do to any `*.coffee` file run
+
   ```bash
   npm run watch:test
   ```
