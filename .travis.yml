@@ -1,7 +1,7 @@
 language: node_js
 branches:
   except:
-    - latest
+  - latest
 node_js:
 - '0.10'
 - '0.12'
@@ -14,7 +14,7 @@ script:
 - cucumber -t ~@wip
 notifications:
   hipchat:
-    rooms:
+    rooms: 
     template:
     - '%{repository}#%{build_number} (%{author}): %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Compare</a>)'
     format: html
@@ -22,6 +22,6 @@ notifications:
     on_failure: change
 env:
   global:
-branches:
-  except:
-  - latest
+  - secure: aGkHh6Zjob7Q0aROvMqWZsNOolBUWcrU7s/kw0g+NpVx1X5mq6rrNaZO9VmNWBqSlOPw5+iisSHEU5xyY4FK9oZc/tkrglW8rfOjrm5hqlocZCVD2tLhmL+XTFSAUKCcrIzZerhx7SaGbncp6ZzJkn6mG0N6pYBRaFCkZsIOeoI=
+  - secure: BWwS1O/I3g8IGgiCUslAKRXrV3A0PSJqHurxoFYM42UEMwSjjdZv5UNusVdNYDhGVyZ8u12WdZm7YX/kbjRI6NxP6ffHtN2zgOYleL+JeUuhI7USvHQ6p+rvHfYyASBHRwhIaZvouJ42SKyoILHMwJdJeNI+MJCq1cKoPoQigFw=
+  - secure: ZKtWyjDuzAAHZaAwq0QhA7S3dL8PUbEMuHmHpl24/ueSPHZDjfBtOfcwb4P30SKjc35Csx0hopc69lR8IpujwdUoE/o/RRdy5VdSvszmhKqK2Oj3hnwv9/bJZx3dNHHXjVsQmd6k4qTzQfwGXM8s7t0DtNlJCXZMxfYkAa0I1I0=
