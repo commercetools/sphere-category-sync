@@ -7,6 +7,7 @@ exports.config = {
   client_secret: "${SPHERE_CLIENT_SECRET}",
   project_key: "${SPHERE_PROJECT_KEY}"
 }
+EOF
 
 cat > "${HOME}/.sphere-project-credentials" << EOF
 ${SPHERE_PROJECT_KEY}:${SPHERE_CLIENT_ID}:${SPHERE_CLIENT_SECRET}
