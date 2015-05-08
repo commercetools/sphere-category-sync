@@ -1,218 +1,90 @@
-Importer = require '../lib/importer'
-Exporter = require '../lib/exporter'
+Importer = require '../lib/csv/importer'
+Exporter = require '../lib/csv/exporter'
 package_json = require '../package.json'
-CONS = require '../lib/constants'
-GLOBALS = require '../lib/globals'
-fs = require 'fs'
-Q = require 'q'
-program = require 'commander'
-prompt = require 'prompt'
-{ProjectCredentialsConfig} = require 'sphere-node-utils'
-Csv = require 'csv'
+{ProjectCredentialsConfig,ExtendedLogger} = require 'sphere-node-utils'
 
-module.exports = class
+yargs = require 'yargs'
+  .usage 'Usage: $0 <command> [options]'
+  .describe 'p', 'project key'
+  .alias 'p', 'project-key'
+  .demand 'p'
 
-  @run: (argv) ->
-    program
-      .version package_json.version
-      .usage '[globals] [sub-command] [options]'
-      .option '-p, --projectKey <key>', 'your SPHERE.IO project-key'
-      .option '-i, --clientId <id>', 'your OAuth client id for the SPHERE.IO API'
-      .option '-s, --clientSecret <secret>', 'your OAuth client secret for the SPHERE.IO API'
-      .option '--sphereHost <host>', 'SPHERE.IO API host to connecto to'
-      .option '--timeout [millis]', 'Set timeout for requests (default is 30000)', parseInt, 30000
-      .option '--verbose', 'give more feedback during action'
-      .option '--debug', 'give as many feedback as possible'
+  .describe 'i', 'client id'
+  .alias 'i', 'client-id'
 
+  .describe 's', 'client secret'
+  .alias 's', 'client-secret'
 
-    program
-      .command 'import'
-      .description 'Import your category tree from CSV into your SPHERE.IO project.'
-      .option '-c, --csv <file>', 'CSV file containing the category tree to import'
-      .option '-l, --language [lang]', 'Default language for slug generation - default is en', 'en'
-      .option '--csvDelimiter [delim]', 'CSV Delimiter that separates the cells (default is comma - ",")', ','
-      .option '--continueOnProblems', 'When a category does not validate on the server side (400er response), ignore it and continue with the next category'
-      .option '--dryRun', 'Will list all action that would be triggered, but will not POST them to SPHERE.IO'
-      .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret> --csv <file>'
-      .action (opts) ->
-        GLOBALS.DEFAULT_LANGUAGE = opts.language
+  .command 'export', 'Export categories'
+  .command 'import', 'Import categories'
 
-        credentialsConfig = ProjectCredentialsConfig.create()
-        .fail (err) ->
-          console.error "Problems on getting client credentials from config files: #{err}"
-          process.exit 2
-        .then (credentials) ->
-          options =
-            config: credentials.enrichCredentials
-              project_key: program.projectKey
-              client_id: program.clientId
-              client_secret: program.clientSecret
-            timeout: program.timeout
-            show_progress: true
-            user_agent: "#{package_json.name} - Import - #{package_json.version}"
-            logConfig:
-              streams: [
-                {level: 'warn', stream: process.stdout}
-              ]
-            csvDelimiter: opts.csvDelimiter
+  .help 'h'
+  .alias 'h', 'help'
 
-          options.host = program.sphereHost if program.sphereHost
+  .version package_json.version
 
-          if program.verbose
-            options.logConfig.streams = [
-              {level: 'info', stream: process.stdout}
-            ]
-          if program.debug
-            options.logConfig.streams = [
-              {level: 'debug', stream: process.stdout}
-            ]
+  .epilog 'copyright 2015'
 
-          importer = new Importer options
-          importer.continueOnProblems = opts.continueOnProblems
-          importer.dryRun = true if opts.dryRun
+argv = yargs.argv
+command = argv._[0]
+project_key = argv.p
 
-          fs.readFile opts.csv, 'utf8', (err, content) ->
-            if err
-              console.error "Problems on reading file '#{opts.csv}': #{err}"
-              process.exit 2
-            else
-              importer.import(content)
-              .then (result) ->
-                console.log result
-                process.exit 0
-              .fail (err) ->
-                console.error err
-                process.exit 1
-              .done()
-        .done()
+logger = new ExtendedLogger
+  additionalFields:
+    project_key: project_key
+  logConfig:
+    name: "#{package_json.name}-#{package_json.version}"
+    streams: [
+      { level: 'info', stream: process.stdout }
+    ]
 
+ProjectCredentialsConfig.create()
+.then (config) ->
+  credentials = config.enrichCredentials
+    project_key: project_key
+    client_id: argv.i
+    client_secret: argv.s
 
-    program
-      .command 'delete'
-      .description 'Allows to delete (all) categories of your SPHERE.IO project.'
-      .option '--csv <file>', 'processes categories defined in a CSV file by either "sku" or "id". Otherwise all categories are processed.'
-      .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret>'
-      .option '--continueOnProblems', "When a there is a problem on deleting a category, ignore it and continue with the next category."
-      .action (opts) ->
+  if command is 'import'
+    yargs.reset()
+    .usage 'Usage: $0 -p <project-key> import -f <CSV file>'
+    .example '$0 -p my-project-42 import -f categories.csv', 'Import categories from "categories.csv" file into SPHERE project with key "my-project-42".'
 
-        credentialsConfig = ProjectCredentialsConfig.create()
-        .fail (err) ->
-          console.error "Problems on getting client credentials from config files: #{err}"
-          process.exit 2
-        .then (credentials) ->
-          options =
-            config: credentials.enrichCredentials
-              project_key: program.projectKey
-              client_id: program.clientId
-              client_secret: program.clientSecret
-            timeout: program.timeout
-            show_progress: true
-            user_agent: "#{package_json.name} - State - #{package_json.version}"
-            logConfig:
-              streams: [
-                {level: 'warn', stream: process.stdout}
-              ]
+    .describe 'f', 'CSV file name'
+    .nargs 'f', 1
+    .alias 'f', 'file'
+    .demand 'f'
+    .argv
 
-          options.host = program.sphereHost if program.sphereHost
+    im = new Importer logger,
+      config: credentials
+    im.run argv.f
+    .then (result) ->
+      logger.info result
 
-          if program.verbose
-            options.logConfig.streams = [
-              {level: 'info', stream: process.stdout}
-            ]
-          if program.debug
-            options.logConfig.streams = [
-              {level: 'debug', stream: process.stdout}
-            ]
+  else if command is 'export'
+    yargs.reset()
+    .usage 'Usage: $0 -p <project-key> [options] export -t <CSV file> -o <CSV file>'
+    .example '$0 -p my-project-42 export -t header.csv -o output.csv', 'Export categories from SPHERE project with key "my-project-42" into "output.csv" file using the template "header.csv".'
 
-          prompt.start()
-          property =
-            name: 'ask'
-            message: 'Do you really want to delete categories?'
-            validator: /y[es]*|n[o]?/
-            warning: 'Please answer with yes or no'
-            default: 'no'
+    .describe 't', 'CSV template file name'
+    .nargs 't', 1
+    .alias 't', 'template'
+    .demand 't'
 
-          prompt.get property, (err, result) ->
-            if _.isString(result.ask) and result.ask.match(/y(es){0,1}/i)
-              importer = new Importer options
-              importer.continueOnProblems = opts.continueOnProblems
-              importer.deleteAll()
-              .then (result) ->
-                console.log result
-                process.exit 0
-              .fail (err) ->
-                console.error err
-                process.exit 1
-              .done()
-            else
-              console.log 'Cancelled.'
-              process.exit 9
-        .done()
+    .describe 'o', 'CSV output file name'
+    .nargs 'o', 1
+    .alias 'o', 'output'
+    .demand 'o'
+    .argv
 
+    ex = new Exporter logger,
+      config: credentials
+    ex.run argv.t, argv.o
 
-    program
-      .command 'export'
-      .description 'Export your categories from your SPHERE.IO project to CSV using.'
-      .option '-t, --template <file>', 'CSV file containing your header that defines what you want to export'
-      .option '-o, --out <file>', 'Path to the file the exporter will write the resulting CSV in'
-      .option '-j, --json <file>', 'Path to the JSON file the exporter will write the resulting categories'
-      .option '-q, --queryString', 'Query string to specify the sub-set of categories to export. Please note that the query must be URL encoded!', 'staged=true'
-      .option '-l, --languages [langs]', 'Language(s) used on export for category names (default is en)', 'en'
-      .usage '--projectKey <project-key> --clientId <client-id> --clientSecret <client-secret> --template <file>'
-      .action (opts) ->
-        GLOBALS.DEFAULT_LANGUAGE = opts.languages
+  else
+    yargs.showHelp()
 
-        options =
-          config:
-            project_key: program.projectKey
-            client_id: program.clientId
-            client_secret: program.clientSecret
-          timeout: program.timeout
-          show_progress: true
-          user_agent: "#{package_json.name} - Export - #{package_json.version}"
-          queryString: opts.queryString
-          logConfig:
-            streams: [
-              {level: 'warn', stream: process.stdout}
-            ]
-
-        options.host = program.sphereHost if program.sphereHost
-
-        if program.verbose
-          options.logConfig.streams = [
-            {level: 'info', stream: process.stdout}
-          ]
-        if program.debug
-          options.logConfig.streams = [
-            {level: 'debug', stream: process.stdout}
-          ]
-
-        exporter = new Exporter options
-        if opts.json
-          exporter.exportAsJson(opts.json)
-          .then (result) ->
-            console.log result
-            process.exit 0
-          .fail (err) ->
-            console.error err
-            process.exit 1
-          .done()
-        else
-          fs.readFile opts.template, 'utf8', (err, content) ->
-            if err
-              console.error "Problems on reading template file '#{opts.template}': #{err}"
-              process.exit 2
-            else
-            exporter.export(content, opts.out)
-            .then (result) ->
-              console.log result
-              process.exit 0
-            .fail (err) ->
-              console.error err
-              process.exit 1
-            .done()
-
-    program.parse argv
-    program.help() if program.args.length is 0
-
-module.exports.run process.argv
+.catch (err) ->
+  logger.error err
+  process.exit 1

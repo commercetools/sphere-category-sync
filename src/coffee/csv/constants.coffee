@@ -4,6 +4,7 @@ constants =
   HEADER_ID: 'id'
   HEADER_EXTERNAL_ID: 'externalId'
   HEADER_ORDER_HINT: 'orderHint'
+  HEADER_PARENT_ID: 'parentId'
 
   HEADER_NAME: 'name'
   HEADER_DESCRIPTION: 'description'
@@ -12,8 +13,7 @@ constants =
   HEADER_CREATED_AT: 'createdAt'
   HEADER_LAST_MODIFIED_AT: 'lastModifiedAt'
 
-  REGEX_LANGUAGE: new RegExp /^[a-z]{2}$/
-
+  REGEX_LANGUAGE: new RegExp /^(.*)\.([a-z]{2})$/
 
 for name, value of constants
   exports[name] = value

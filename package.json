@@ -1,7 +1,7 @@
 {
   "name": "sphere-category-sync",
   "description": "Import and export your category tree from/to your SPHERE.IO project.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/sphereio/sphere-category-sync",
   "private": true,
   "author": {
@@ -24,28 +24,35 @@
   "bin": {
     "category-sync": "bin/category-sync"
   },
+  "main": "./lib",
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.10.0"
   },
   "scripts": {
-    "test": "grunt coverage"
+    "build": "grunt build",
+    "test": "grunt test",
+    "coverage": "grunt coverage",
+    "watch:test": "grunt watch:test"
   },
   "dependencies": {
-    "commander": "2.3.0",
-    "csv": "0.3.7",
-    "sphere-node-client": "0.7.4",
-    "sphere-node-sync": "0.5.13",
-    "sphere-node-utils": "0.4.11",
-    "optimist": "0.6.1",
-    "prompt": "0.2.12",
-    "q": "1.0.1",
-    "underscore": "1.6.0",
-    "underscore.string": "2.3.3"
+    "bluebird": "2.9.5",
+    "csv": "0.4.1",
+    "csv-stringify": "0.0.6",
+    "debug": "2.1.3",
+    "highland": "2.4.x",
+    "sphere-node-sdk": "1.3.3",
+    "sphere-node-utils": "0.6.0",
+    "stream-transform": "0.0.7",
+    "underscore": "1.8.2",
+    "underscore.string": "3.0.3",
+    "underscore-mixins": "0.1.3",
+    "yargs": "3.6.0"
   },
   "devDependencies": {
     "coveralls": "2.10.0",
     "grunt": "0.4.4",
     "grunt-bump": "0.0.13",
+    "grunt-cli": "0.1.3",
     "grunt-coffeelint": "0.0.8",
     "grunt-contrib-clean": "0.5.0",
     "grunt-contrib-coffee": "0.10.1",
