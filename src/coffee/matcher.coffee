@@ -25,17 +25,23 @@ class Matcher
   resolveParent: (category) ->
     new Promise (resolve, reject) =>
       if category.parent
+        category.parent.typeId = 'category'
         parentId = @externalId2IdMap[category.parent.id]
         if parentId
           @logger.info "Found parent for id '#{category.parent.id}'."
           category.parent.id = parentId
-          category.parent.typeId = 'category'
-          resolve category
         else
-          # we can try once again to resolve it remote here
-          reject "Could not resolve parent with id '#{category.parent.id}'"
-      else
-        resolve category
+          @apiClient.getByExternalIds [category.parent.id]
+          .then (result) ->
+            if results.count is 1
+              category.parent.id = result.body.results[0].id
+              resolve category
+            else
+              reject "Could not resolve parent with id '#{category.parent.id}'"
+          .catch (err) ->
+            reject "Problem in resolving parent with id '#{category.parent.id}': #{err}"
+
+      resolve category
 
   match: (category) ->
     new Promise (resolve, reject) =>
