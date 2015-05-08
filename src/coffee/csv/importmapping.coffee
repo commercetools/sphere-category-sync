@@ -25,7 +25,7 @@ class ImportMapping extends Header
         (row, json) ->
           if row[header]
             json['parent'] =
-              type: 'category'
+              typeId: 'category'
               id: row[header]
       else
         (row, json) ->

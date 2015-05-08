@@ -27,7 +27,7 @@ describe 'ImportMapping', ->
         parentId: 'root'
       expect(json).toEqual
         parent:
-          type: 'category'
+          typeId: 'category'
           id: 'root'
 
     it 'should not map empty parentId entry', ->
