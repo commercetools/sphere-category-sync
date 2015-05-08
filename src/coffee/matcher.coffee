@@ -8,6 +8,7 @@ class Matcher
     @currentCandidates = []
 
   addMapping: (category) ->
+    @logger.info "Add mapping for exernalId: '#{category.externalId}' -> id: '#{category.id}'"
     @externalId2IdMap[category.externalId] = category.id
 
   initialize: (categories) ->
@@ -33,7 +34,7 @@ class Matcher
         else
           @apiClient.getByExternalIds [category.parent.id]
           .then (result) ->
-            if results.count is 1
+            if result.body.count is 1
               category.parent.id = result.body.results[0].id
               resolve category
             else
@@ -48,8 +49,8 @@ class Matcher
       cat = _.find @currentCandidates, (candidate) ->
         candidate.externalId is category.externalId
       if cat
-        @logger.info "Found match with externalId '#{cat.externalId}'."
-        @addMapping category
+        @logger.info "Found match for externalId '#{cat.externalId}' with id '#{cat.id}'."
+        @addMapping cat
       else
         msg = "No match found for category with external id '#{category.externalId}'"
         @logger.info msg
