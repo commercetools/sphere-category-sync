@@ -51,7 +51,9 @@ cd tmp
 curl -s -L https://github.com/sphereio/${PKG_NAME}/archive/latest.zip -o latest.zip
 unzip -q latest.zip
 cd "${PKG_NAME}-latest"
+set +e
 node lib/run
+set -e
 cd ../..
 
 # cleanup package / tmp folder
