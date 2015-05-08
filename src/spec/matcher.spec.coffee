@@ -26,7 +26,6 @@ describe 'ApiClient', ->
       apiClient =
         getByExternalIds: ->
           new Promise (resolve, reject) ->
-            console.log "HAJO"
             res =
               body:
                 results: [
