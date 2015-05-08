@@ -31,9 +31,10 @@ describe 'Streaming', ->
     .catch (err) -> done(_.prettify err)
 
   describe '#constructor', ->
-    it 'should initialize', ->
+    it 'should initialize', (done) ->
       expect(-> new Streaming()).toBeDefined()
       expect(@streaming).toBeDefined()
+      done()
 
   describe '#processStream', ->
     it 'should create one new category', (done) ->
