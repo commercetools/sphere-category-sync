@@ -12,4 +12,4 @@ Feature: Update categories
     Then the exit status should be 0
     And the output should contain "Processing '1' category"
     And the output should contain "Found candidates: 1"
-    And the output should contain "Found match with externalId 'exId1'"
+    And the output should contain "Found match for externalId 'exId1'"
