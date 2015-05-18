@@ -3,7 +3,7 @@
   "description": "Import and export your category tree from/to your SPHERE.IO project.",
   "version": "0.1.1",
   "homepage": "https://github.com/sphereio/sphere-category-sync",
-  "private": true,
+  "private": false,
   "author": {
     "name": "Hajo Eichler",
     "email": "hajo.eichler@commercetools.de"
