@@ -14,7 +14,7 @@ cleanup = (logger, apiClient) ->
         apiClient.delete cat
       .then (results) ->
         resolve results
-    .catch (err)
+    .catch (err) ->
       reject err
 
 describe 'Streaming', ->
