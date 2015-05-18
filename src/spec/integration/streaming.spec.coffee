@@ -11,8 +11,8 @@ cleanup = (logger, apiClient) ->
     logger.info "Cleaning categories: #{_.size result.body.results}"
     Promise.all _.map result.body.results, (cat) ->
       apiClient.delete cat
-  .then (results) ->
-    Promise.resolve()
+    .then (results) ->
+      Promise.resolve()
 
 describe 'Streaming', ->
   beforeEach (done) ->
@@ -31,7 +31,7 @@ describe 'Streaming', ->
     .catch (err) -> done(_.prettify err)
 
   describe '#constructor', ->
-    xit 'should initialize', (done) ->
+    it 'should initialize', (done) ->
       expect(-> new Streaming()).toBeDefined()
       expect(@streaming).toBeDefined()
       done()
