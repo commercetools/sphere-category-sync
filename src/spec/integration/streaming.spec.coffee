@@ -31,7 +31,7 @@ describe 'Streaming', ->
     .catch (err) -> done(_.prettify err)
 
   describe '#constructor', ->
-    it 'should initialize', (done) ->
+    xit 'should initialize', (done) ->
       expect(-> new Streaming()).toBeDefined()
       expect(@streaming).toBeDefined()
       done()
