@@ -6,16 +6,11 @@ Config = require '../../config'
 Promise = require 'bluebird'
 
 cleanup = (logger, apiClient) ->
-  new Promise (resolve, reject) ->
-    apiClient.client.categories.all().fetch()
-    .then (result) ->
-      logger.info "Cleaning categories: #{_.size result.body.results}"
-      Promise.all _.map result.body.results, (cat) ->
-        apiClient.delete cat
-      .then (results) ->
-        resolve results
-    .catch (err) ->
-      reject err
+  apiClient.client.categories.where('parent is not defined').all().fetch()
+  .then (result) ->
+    logger.info "Cleaning categories: #{_.size result.body.results}"
+    Promise.all _.map result.body.results, (cat) ->
+      apiClient.delete cat
 
 describe 'Streaming', ->
   beforeEach (done) ->
