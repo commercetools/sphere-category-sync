@@ -9,6 +9,9 @@ constants =
   HEADER_NAME: 'name'
   HEADER_DESCRIPTION: 'description'
   HEADER_SLUG: 'slug'
+  HEADER_META_TITLE: 'metaTitle'
+  HEADER_META_DESCRIPTION: 'metaDescription'
+  HEADER_META_KEYWORDS: 'metaKeywords'
 
   HEADER_CREATED_AT: 'createdAt'
   HEADER_LAST_MODIFIED_AT: 'lastModifiedAt'
@@ -30,4 +33,7 @@ exports.LOCALIZED_HEADERS = [
   constants.HEADER_NAME
   constants.HEADER_DESCRIPTION
   constants.HEADER_SLUG
+  constants.HEADER_META_TITLE
+  constants.HEADER_META_DESCRIPTION
+  constants.HEADER_META_KEYWORDS
 ]
