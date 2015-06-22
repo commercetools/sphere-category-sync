@@ -75,3 +75,20 @@ describe 'ExportMapping', ->
       expect(_.isFunction(ex.index2CsvFn[1])).toBe true
       json = ex.toCSV {}
       expect(json).toEqual [ undefined, undefined ]
+
+    it 'should map externalId into parentId if requested', ->
+      ex = new ExportMapping [ 'parentId' ], parentBy: 'externalId'
+      ex.validate()
+      expect(_.size ex.index2CsvFn).toBe 1
+      expect(_.isFunction(ex.index2CsvFn[0])).toBe true
+      json = ex.toCSV
+        id: 'i1'
+        externalId: 'e1'
+        parent:
+          type: 'category'
+          id: 'i2'
+          obj:
+            id: 'i2'
+            externalId: 'e2'
+      expect(json).toEqual [ 'e2' ]
+

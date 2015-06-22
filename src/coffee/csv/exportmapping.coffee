@@ -4,8 +4,9 @@ CONS = require './constants'
 
 class ExportMapping extends Header
 
-  constructor: (@rawHeader) ->
+  constructor: (@rawHeader, options = {}) ->
     super @rawHeader
+    @parentBy = options.parentBy
     @index2CsvFn = []
 
   toCSV: (category) ->
@@ -22,9 +23,12 @@ class ExportMapping extends Header
   handleHeader: (header, index) ->
     if _.isUndefined @index2CsvFn[index]
       @index2CsvFn[index] = if header is CONS.HEADER_PARENT_ID
-        (json, row) ->
+        (json, row) =>
           row[index] = if json['parent']
-            json['parent']['id']
+            if json['parent']['obj'] and @parentBy
+              json['parent']['obj'][@parentBy]
+            else
+              json['parent']['id']
           else
             ''
       else

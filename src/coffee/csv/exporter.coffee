@@ -13,13 +13,14 @@ class Exporter
 
   constructor: (@logger, options = {}) ->
     @client = new SphereClient options
+    @parentBy = options.parentBy
 
   loadTemplate: (fileName) ->
     new Promise (resolve, reject) =>
       parser = csv.parse
         delimiter: ','
         columns: (rawHeader) =>
-          @mapping = new ExportMapping rawHeader
+          @mapping = new ExportMapping rawHeader, parentBy: @parentBy
           errors = @mapping.validate()
           throw { errors } if _.size errors
           @write [rawHeader] # pass array of array to ensure newline in CSV
@@ -57,7 +58,10 @@ class Exporter
             .then (result) ->
               resolve result
 
-        @client.categories.all().process(processChunk, {accumulate: false})
+        @client.categories
+        .all()
+        .expand('parent')
+        .process(processChunk, {accumulate: false})
         .then (result) =>
           @stream.end()
 

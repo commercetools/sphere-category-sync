@@ -67,6 +67,10 @@ ProjectCredentialsConfig.create()
     .usage 'Usage: $0 -p <project-key> [options] export -t <CSV file> -o <CSV file>'
     .example '$0 -p my-project-42 export -t header.csv -o output.csv', 'Export categories from SPHERE project with key "my-project-42" into "output.csv" file using the template "header.csv".'
 
+    .describe 'parentBy', 'Property to use to identify parent'
+    .nargs 'parentBy', 1
+    .default 'externalId'
+
     .describe 't', 'CSV template file name'
     .nargs 't', 1
     .alias 't', 'template'
@@ -80,6 +84,7 @@ ProjectCredentialsConfig.create()
 
     ex = new Exporter logger,
       config: credentials
+      parentBy: argv.parentBy
     ex.run argv.t, argv.o
 
   else

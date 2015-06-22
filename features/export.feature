@@ -28,6 +28,28 @@ Feature: Export categories
     And the file "output1.csv" should contain "name.en,slug.en"
     And the file "output1.csv" should contain "Some Export Category,some-export-category"
 
+  Scenario: Use externalId for parentId during Export
+    Given a file named "single.csv" with:
+    """
+    externalId,name.de,slug.de,parentId
+    e-1,Foo,foo
+    e-2,Bar,bar,e-1
+    e-3,Baz,baz,e-1
+    """
+    When I run `../../bin/category-sync -p import-101-64 import -f single.csv`
+    Then the exit status should be 0
+    Given a file named "externalId-parentId.csv" with:
+    """
+    externalId,parentId
+    """
+    When I run `../../bin/category-sync -p import-101-64 export --parentBy externalId -t externalId-parentId.csv -o output3.csv`
+    Then the exit status should be 0
+    Then a file named "output3.csv" should exist
+    And the file "output3.csv" should contain "externalId,parentId"
+    And the file "output3.csv" should contain "e-1,"
+    And the file "output3.csv" should contain "e-2,e-1"
+    And the file "output3.csv" should contain "e-3,e-1"
+
   Scenario: Impex all possible attributes
     Given a file named "full.csv" with:
     """
