@@ -27,7 +27,7 @@ class Importer
           rawHeader
       parser.on 'error', (error) ->
         reject error
-      parser.on 'finish', =>
+      parser.on 'finish', ->
         resolve 'Import done.'
 
       transformer = transform (row, callback) =>
