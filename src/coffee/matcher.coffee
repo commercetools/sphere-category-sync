@@ -1,15 +1,20 @@
 _ = require 'underscore'
 Promise = require 'bluebird'
+CONS = require './csv/constants'
 
 class Matcher
 
   constructor: (@logger, @apiClient) ->
+    @parentBy = CONS.HEADER_EXTERNAL_ID
+    @language = 'en'
+    @slug2IdMap = {}
     @externalId2IdMap = {}
     @currentCandidates = []
 
   addMapping: (category) ->
     @logger.info "Add mapping for exernalId: '#{category.externalId}' -> id: '#{category.id}'"
     @externalId2IdMap[category.externalId] = category.id
+    @slug2IdMap[category.slug[@language]] = category.id
 
   initialize: (categories) ->
     @logger.info "Getting candidates: #{_.size categories}"
@@ -27,12 +32,12 @@ class Matcher
     new Promise (resolve, reject) =>
       if category.parent
         category.parent.typeId = 'category'
-        parentId = @externalId2IdMap[category.parent.id]
+        parentId = refFromCache category.parent
         if parentId
           @logger.info "Found parent for id '#{category.parent.id}'."
           category.parent.id = parentId
         else
-          @apiClient.getByExternalIds [category.parent.id]
+          fetchRef(category.parent)
           .then (result) ->
             if result.body.count is 1
               category.parent.id = result.body.results[0].id
@@ -43,6 +48,18 @@ class Matcher
             reject "Problem in resolving parent with id '#{category.parent.id}': #{err}"
 
       resolve category
+
+  refFromCache: (parent) ->
+    if @parentBy is CONS.HEADER_SLUG
+      @slug2IdMap[parent.slug[@language]]
+    else
+      @externalId2IdMap[parent.id]
+
+  fetchRef: (parent) ->
+    if @parentBy is CONS.HEADER_SLUG
+      @apiClient.getBySlugs [parent.slug], @language
+    else
+      @apiClient.getByExternalIds [parent.id]
 
   match: (category) ->
     new Promise (resolve, reject) =>
