@@ -4,9 +4,9 @@ CONS = require './csv/constants'
 
 class Matcher
 
-  constructor: (@logger, @apiClient) ->
-    @parentBy = CONS.HEADER_EXTERNAL_ID
-    @language = 'en'
+  constructor: (@logger, @apiClient, options = {}) ->
+    @parentBy = options.parentBy
+    @language = options.language
     @slug2IdMap = {}
     @externalId2IdMap = {}
     @currentCandidates = []
@@ -14,7 +14,8 @@ class Matcher
   addMapping: (category) ->
     @logger.info "Add mapping for exernalId: '#{category.externalId}' -> id: '#{category.id}'"
     @externalId2IdMap[category.externalId] = category.id
-    @slug2IdMap[category.slug[@language]] = category.id
+    if category.slug
+      @slug2IdMap[category.slug[@language]] = category.id
 
   initialize: (categories) ->
     @logger.info "Getting candidates: #{_.size categories}"
@@ -30,34 +31,38 @@ class Matcher
 
   resolveParent: (category) ->
     new Promise (resolve, reject) =>
+      _resolve = (cat, parentId) ->
+        cat.parent.id = parentId
+        cat.parent.typeId = 'category'
+        delete cat.parent._rawParentId
+        resolve cat
       if category.parent
-        category.parent.typeId = 'category'
-        parentId = refFromCache category.parent
+        parentId = @getIdFromCache category.parent
+        msgAppendix = "parent for '#{category.parent.id}' using #{@parentBy} (language: #{@language})."
         if parentId
-          @logger.info "Found parent for id '#{category.parent.id}'."
-          category.parent.id = parentId
+          @logger.info "Found #{msgAppendix}"
+          _resolve category, parentId
         else
-          fetchRef(category.parent)
+          @fetchRef(category.parent)
           .then (result) ->
             if result.body.count is 1
-              category.parent.id = result.body.results[0].id
-              resolve category
+              _resolve category, result.body.results[0].id
             else
-              reject "Could not resolve parent with id '#{category.parent.id}'"
+              reject "Could not resolve #{msgAppendix}"
           .catch (err) ->
-            reject "Problem in resolving parent with id '#{category.parent.id}': #{err}"
+            reject "Problem in resolving #{msgAppendix}: #{err}"
 
       resolve category
 
-  refFromCache: (parent) ->
+  getIdFromCache: (parent) ->
     if @parentBy is CONS.HEADER_SLUG
-      @slug2IdMap[parent.slug[@language]]
+      @slug2IdMap[parent.id]
     else
       @externalId2IdMap[parent.id]
 
   fetchRef: (parent) ->
     if @parentBy is CONS.HEADER_SLUG
-      @apiClient.getBySlugs [parent.slug], @language
+      @apiClient.getBySlugs [parent.id], @language
     else
       @apiClient.getByExternalIds [parent.id]
 

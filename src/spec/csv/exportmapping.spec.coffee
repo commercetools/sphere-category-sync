@@ -92,3 +92,20 @@ describe 'ExportMapping', ->
             externalId: 'e2'
       expect(json).toEqual [ 'e2' ]
 
+    it 'should map slug into parentId if requested', ->
+      ex = new ExportMapping [ 'parentId' ], { language: 'en', parentBy: 'slug' }
+      ex.validate()
+      expect(_.size ex.index2CsvFn).toBe 1
+      expect(_.isFunction(ex.index2CsvFn[0])).toBe true
+      json = ex.toCSV
+        id: 'i3'
+        externalId: 'e3'
+        parent:
+          type: 'category'
+          id: 'i4'
+          obj:
+            id: 'i4'
+            externalId: 'e4'
+            slug:
+              en: 'slug-4'
+      expect(json).toEqual [ 'slug-4' ]

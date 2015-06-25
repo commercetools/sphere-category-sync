@@ -6,6 +6,7 @@ class ExportMapping extends Header
 
   constructor: (@rawHeader, options = {}) ->
     super @rawHeader
+    @language = options.language
     @parentBy = options.parentBy
     @index2CsvFn = []
 
@@ -26,7 +27,11 @@ class ExportMapping extends Header
         (json, row) =>
           row[index] = if json['parent']
             if json['parent']['obj'] and @parentBy
-              json['parent']['obj'][@parentBy]
+              v = json['parent']['obj'][@parentBy]
+              if @parentBy is CONS.HEADER_SLUG
+                v[@language]
+              else
+                v
             else
               json['parent']['id']
           else

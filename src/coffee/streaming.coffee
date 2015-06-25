@@ -8,7 +8,7 @@ class Streaming
 
   constructor: (@logger, options) ->
     @apiClient = new ApiClient @logger, options
-    @matcher = new Matcher @logger, @apiClient
+    @matcher = new Matcher @logger, @apiClient, options
     @actionsToIgnore = options.actionsToIgnore
 
   processStream: (chunk, cb) ->

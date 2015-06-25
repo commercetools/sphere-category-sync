@@ -15,6 +15,14 @@ yargs = require 'yargs'
   .describe 's', 'client secret'
   .alias 's', 'client-secret'
 
+  .describe 'language'
+  .nargs 'language', 1
+  .default 'language', 'en'
+
+  .describe 'parentBy'
+  .nargs 'parentBy', 1
+  .default 'parentBy', 'externalId'
+
   .command 'export', 'Export categories'
   .command 'import', 'Import categories'
 
@@ -28,6 +36,8 @@ yargs = require 'yargs'
 argv = yargs.argv
 command = argv._[0]
 project_key = argv.p
+language = argv.language
+parentBy = argv.parentBy
 
 logger = new ExtendedLogger
   additionalFields:
@@ -58,6 +68,8 @@ ProjectCredentialsConfig.create()
 
     im = new Importer logger,
       config: credentials
+      language: language
+      parentBy: parentBy
     im.run argv.f
     .then (result) ->
       logger.info result
@@ -66,10 +78,6 @@ ProjectCredentialsConfig.create()
     yargs.reset()
     .usage 'Usage: $0 -p <project-key> [options] export -t <CSV file> -o <CSV file>'
     .example '$0 -p my-project-42 export -t header.csv -o output.csv', 'Export categories from SPHERE project with key "my-project-42" into "output.csv" file using the template "header.csv".'
-
-    .describe 'parentBy', 'Property to use to identify parent'
-    .nargs 'parentBy', 1
-    .default 'externalId'
 
     .describe 't', 'CSV template file name'
     .nargs 't', 1
@@ -84,7 +92,8 @@ ProjectCredentialsConfig.create()
 
     ex = new Exporter logger,
       config: credentials
-      parentBy: argv.parentBy
+      language: language
+      parentBy: parentBy
     ex.run argv.t, argv.o
 
   else
