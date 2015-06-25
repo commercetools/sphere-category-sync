@@ -46,7 +46,7 @@
     "underscore": "1.8.3",
     "underscore.string": "3.0.3",
     "underscore-mixins": "0.1.4",
-    "yargs": "3.9.0"
+    "yargs": "3.13.0"
   },
   "devDependencies": {
     "coveralls": "2.10.0",
