@@ -3,7 +3,7 @@ Matcher = require '../lib/matcher'
 Promise = require 'bluebird'
 {ExtendedLogger} = require 'sphere-node-utils'
 
-describe 'ApiClient', ->
+describe 'Matcher', ->
   beforeEach ->
     @logger = new ExtendedLogger()
     @matcher = new Matcher(@logger)
