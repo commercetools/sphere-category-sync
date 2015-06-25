@@ -8,8 +8,8 @@ class ApiClient
   constructor: (@logger, options) ->
     @sync = new CategorySync options
     @client = new SphereClient options
+    @continueOnProblems = options.continueOnProblems
 
-    @continueOnProblems = false
     @updatesOnly = false
     @dryRun = false
 

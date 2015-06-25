@@ -23,6 +23,9 @@ yargs = require 'yargs'
   .nargs 'parentBy', 1
   .default 'parentBy', 'externalId'
 
+  .describe 'continueOnProblems'
+  .boolean 'continueOnProblems'
+
   .command 'export', 'Export categories'
   .command 'import', 'Import categories'
 
@@ -38,6 +41,7 @@ command = argv._[0]
 project_key = argv.p
 language = argv.language
 parentBy = argv.parentBy
+continueOnProblems = argv.continueOnProblems
 
 logger = new ExtendedLogger
   additionalFields:
@@ -70,6 +74,7 @@ ProjectCredentialsConfig.create()
       config: credentials
       language: language
       parentBy: parentBy
+      continueOnProblems: continueOnProblems
     im.run argv.f
     .then (result) ->
       logger.info result
@@ -94,6 +99,7 @@ ProjectCredentialsConfig.create()
       config: credentials
       language: language
       parentBy: parentBy
+      continueOnProblems: continueOnProblems
     ex.run argv.t, argv.o
 
   else

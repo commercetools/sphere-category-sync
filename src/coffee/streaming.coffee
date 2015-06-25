@@ -36,7 +36,10 @@ class Streaming
                 @apiClient.create(cat)
                 .then (result) =>
                   # remember id of created category for faster parent match
-                  @matcher.addMapping result.body
+                  if result.body
+                    @matcher.addMapping result.body
+                  else
+                    @logger.warn result
                   Promise.resolve result
         Promise.all posts
 

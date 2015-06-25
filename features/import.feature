@@ -43,3 +43,15 @@ Feature: Import categories
     And the output should contain "Found parent for 'root-slug' using slug (language: en)."
     And the output should contain "Found parent for 'sub-category-slug' using slug (language: en)."
     And the output should contain "Import done."
+
+  Scenario: Continue on problems
+    Given a file named "problem.csv" with:
+    """
+    name.en,slug.en,parentId
+    A Category,a-slug,Not Existing!!!
+    """
+    When I run `../../bin/category-sync --continueOnProblems -p import-101-64 import -f problem.csv`
+    Then the exit status should be 0
+    And the output should contain "BadRequest: Request body does not contain valid JSON. - payload"
+    And the output should contain "- ignored!"
+    And the output should contain "Import done."
