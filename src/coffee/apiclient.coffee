@@ -48,7 +48,7 @@ class ApiClient
         .then (result) ->
           resolve "[#{context.sourceInfo}] Category updated."
         .catch (err) =>
-          if err.statusCode is 400
+          if err.code is 400
             msg = "[#{context.sourceInfo}] Problem on updating category:\n#{_.prettify err} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
             if @continueOnProblems
               resolve "#{msg} - ignored!"
@@ -71,7 +71,7 @@ class ApiClient
         .then (result) ->
           resolve result
         .catch (err) =>
-          if err.statusCode is 400
+          if err.code is 400
             msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err} - payload: #{_.prettify category}"
             if @continueOnProblems
               resolve "#{msg} - ignored!"

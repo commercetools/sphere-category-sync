@@ -44,7 +44,7 @@ describe 'ApiClient', ->
 
     it 'should reject promise on problems', (done) ->
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
-        new Promise (resolve, reject) -> reject({statusCode: 500})
+        new Promise (resolve, reject) -> reject({code: 500})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
       .then (r) ->
         done("creation should end in error, but: #{res}")
@@ -54,7 +54,7 @@ describe 'ApiClient', ->
 
     it 'should reject promise on data problems', (done) ->
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
-        new Promise (resolve, reject) -> reject({statusCode: 400})
+        new Promise (resolve, reject) -> reject({code: 400})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
       .then (res) ->
         done("creation should end in problem, but: #{res}")
@@ -65,7 +65,7 @@ describe 'ApiClient', ->
     it 'should resolve promise on data problems in continueOnProblems mode', (done) ->
       @apiClient.continueOnProblems = true
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
-        new Promise (resolve, reject) -> reject({statusCode: 400})
+        new Promise (resolve, reject) -> reject({code: 400})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
       .then (res) ->
         expect(res).toMatch /ignored!/
@@ -100,7 +100,7 @@ describe 'ApiClient', ->
         done("Failed dryRun update:\n#{_.prettify err}")
 
     it 'should reject on update errors', (done) ->
-      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 500 })
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { code: 500 })
       @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         done(res)
@@ -109,7 +109,7 @@ describe 'ApiClient', ->
         done()
 
     it 'should reject on update problems', (done) ->
-      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 400 })
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { code: 400 })
       @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         done(res)
@@ -119,7 +119,7 @@ describe 'ApiClient', ->
 
     it 'should resolve with continueOnProblems on update problems', (done) ->
       @apiClient.continueOnProblems = true
-      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { statusCode: 400 })
+      spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.reject( { code: 400 })
       @apiClient.update { name: 'myCat' }, { id: '123', name: 'otherCat' }
       .then (res) ->
         expect(res).toMatch /ignored!/
@@ -145,7 +145,7 @@ describe 'ApiClient', ->
 
     it 'should reject promise on deletion problems', (done) ->
       spyOn(@apiClient.client.categories, 'delete').andCallFake ->
-        new Promise (resolve, reject) -> reject({statusCode: 400})
+        new Promise (resolve, reject) -> reject({code: 400})
       @apiClient.delete({ id: 'abc', version: 3 }, { sourceInfo: 'none' })
       .then (res) ->
         done("deletion should end in problem, but: #{res}")
