@@ -20,6 +20,13 @@ class ApiClient
     .where("externalId in (#{quotedIds.join(', ')})")
     .fetch()
 
+  getBySlugs: (slugs, language) ->
+    quotedSlugs = _.map slugs, (slug) -> "\"#{slug}\""
+    @client.categories
+    .all()
+    .where("slug(#{language} in (#{slugs.join(', ')}))")
+    .fetch()
+
   update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
     @logger.debug "performing update"
     new Promise (resolve, reject) =>

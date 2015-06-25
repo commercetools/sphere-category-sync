@@ -15,6 +15,14 @@ yargs = require 'yargs'
   .describe 's', 'client secret'
   .alias 's', 'client-secret'
 
+  .describe 'language'
+  .nargs 'language', 1
+  .default 'language', 'en'
+
+  .describe 'parentBy'
+  .nargs 'parentBy', 1
+  .default 'parentBy', 'externalId'
+
   .command 'export', 'Export categories'
   .command 'import', 'Import categories'
 
@@ -28,6 +36,8 @@ yargs = require 'yargs'
 argv = yargs.argv
 command = argv._[0]
 project_key = argv.p
+language = argv.language
+parentBy = argv.parentBy
 
 logger = new ExtendedLogger
   additionalFields:
@@ -58,6 +68,8 @@ ProjectCredentialsConfig.create()
 
     im = new Importer logger,
       config: credentials
+      language: language
+      parentBy: parentBy
     im.run argv.f
     .then (result) ->
       logger.info result
@@ -80,6 +92,8 @@ ProjectCredentialsConfig.create()
 
     ex = new Exporter logger,
       config: credentials
+      language: language
+      parentBy: parentBy
     ex.run argv.t, argv.o
 
   else

@@ -24,6 +24,7 @@ describe 'Streaming', ->
         ]
     @streaming = new Streaming @logger,
       config: Config.config
+      parentBy: 'externalId'
     cleanup(@logger, @streaming.apiClient)
     .then -> done()
     .catch (err) -> done(_.prettify err)
