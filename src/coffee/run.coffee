@@ -15,16 +15,17 @@ yargs = require 'yargs'
   .describe 's', 'client secret'
   .alias 's', 'client-secret'
 
-  .describe 'language'
+  .describe 'language', 'Language used for slugs when referencing parent.'
   .nargs 'language', 1
   .default 'language', 'en'
 
-  .describe 'parentBy'
+  .describe 'parentBy', 'Property used to reference parent - use externalId or slug or id'
   .nargs 'parentBy', 1
   .default 'parentBy', 'externalId'
 
-  .describe 'continueOnProblems'
+  .describe 'continueOnProblems', 'Continue with creating/updating further categories even if API returned with 400 status code.'
   .boolean 'continueOnProblems'
+  .default 'continueOnProblems', false
 
   .command 'export', 'Export categories'
   .command 'import', 'Import categories'
