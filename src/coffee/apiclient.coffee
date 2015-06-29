@@ -49,13 +49,13 @@ class ApiClient
           resolve "[#{context.sourceInfo}] Category updated."
         .catch (err) =>
           if err.code is 400
-            msg = "[#{context.sourceInfo}] Problem on updating category:\n#{_.prettify err} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
+            msg = "[#{context.sourceInfo}] Problem on updating category:\n#{_.prettify err.body} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
             if @continueOnProblems
               resolve "#{msg} - ignored!"
             else
               reject msg
           else
-            msg = "[#{context.sourceInfo}] Error on updating category:\n#{_.prettify err} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
+            msg = "[#{context.sourceInfo}] Error on updating category:\n#{_.prettify err.body} - payload: #{_.prettify actionsToSync.getUpdatePayload()}"
             @logger.error msg
             reject msg
 
@@ -72,13 +72,13 @@ class ApiClient
           resolve result
         .catch (err) =>
           if err.code is 400
-            msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err} - payload: #{_.prettify category}"
+            msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
             if @continueOnProblems
               resolve "#{msg} - ignored!"
             else
               reject msg
           else
-            msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err} - payload: #{_.prettify category}"
+            msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
             @logger.error msg
             reject msg
 
@@ -88,6 +88,6 @@ class ApiClient
       .then ->
         resolve "[#{context.sourceInfo}] Category deleted."
       .catch (err) ->
-        reject "[#{context.sourceInfo}] Error on deleting category:\n#{_.prettify err}"
+        reject "[#{context.sourceInfo}] Error on deleting category:\n#{_.prettify err.body}"
 
 module.exports = ApiClient
