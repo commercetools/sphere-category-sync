@@ -25,6 +25,13 @@ Options:
   -p, --project-key    project key         [required]
   -i, --client-id      client id
   -s, --client-secret  client secret
+  --language            Language used for slugs when referencing parent.
+                                                                 [default: "en"]
+  --parentBy            Property used to reference parent - use externalId or
+                        slug or id                       [default: "externalId"]
+  --continueOnProblems  Continue with creating/updating further categories even
+                        if API returned with 400 status code.
+                                                      [boolean] [default: false]
   -h, --help           Show help
   --version            Show version number
 ```
@@ -75,6 +82,25 @@ Examples:
                                               template "header.csv".
 ```
 
+## Resolving parent category
+
+A category without a parent is called `root` category. All other categories have a parent.
+To define a parent by default you provide the externalId of the parent category.
+```csv
+externalId,name,parentId
+root123,Root Category,
+sub123,Sub Category,root123
+```
+
+But you may also use the slug to reference your parent category.
+```csv
+name,slug.en,parentId
+Root Category,root-cat,
+Sub Category,sub-cat,root-cat
+```
+
+Ensure that you have set the right language to choose the slug. By default it's English.
+
 ## CSV Format
 
 In general the CSV is built up of a header row and the content rows.
@@ -85,6 +111,9 @@ We support the following headers:
 - externalId: id of the category defined by the user
 - parentId: id of the parent category - we reference other categories by `externalId` here
 - orderHint: a string that is used to order categories of the same parent. We recommend to use values between `0.1` and `0.9`.
+- metaTitle: [localized title of category for search engines](#localized-attributes)
+- metaDescription: [localized description to be used by search engines](#localized-attributes)
+- metaKeywords: [localized SEO keywords for the category](#localized-attributes)
 
 Further you might use the following header during export:
 - id: id of category in SPHERE.IO
