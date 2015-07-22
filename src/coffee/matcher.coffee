@@ -57,14 +57,18 @@ class Matcher
   getIdFromCache: (parent) ->
     if @parentBy is CONS.HEADER_SLUG
       @slug2IdMap[parent.id]
-    else
+    if @parentBy is CONS.HEADER_EXTERNAL_ID
       @externalId2IdMap[parent.id]
+    else
+      parent.id
 
   fetchRef: (parent) ->
     if @parentBy is CONS.HEADER_SLUG
       @apiClient.getBySlugs [parent.id], @language
-    else
+    if @parentBy is CONS.HEADER_EXTERNAL_ID
       @apiClient.getByExternalIds [parent.id]
+    else
+      @apiClient.byId parent.Id
 
   match: (category) ->
     new Promise (resolve, reject) =>
