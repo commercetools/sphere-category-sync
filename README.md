@@ -66,7 +66,7 @@ The `import` sub-command will never delete a category.
 To export categories, you can pass a CSV file as template. The template needs to contain only the header.
 This will allow you to define the content of the output file to your specific needs.
 Please have a look at the [CSV Format section](#csv-format) for the different headers supported.
-If you don't provide a template, the tools will export all possible information in the languages defined in the project.
+If no template is provided using the `-t' parameter, all possible category attributes will be exported incl. all localisations.
 
 The command line to export categories into a CSV file is:
 ```
