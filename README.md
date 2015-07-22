@@ -136,6 +136,15 @@ Nevertheless, running the program locally, you need [NodeJS](https://nodejs.org/
 
 ```bash
 npm install sphere-category-sync
+./node_modules/.bin/category-sync
+#
+```
+
+You may also install it globally if you have sufficent rights on your computer:
+```bash
+npm install -g sphere-category-sync
+category-sync
+#
 ```
 
 # Development
