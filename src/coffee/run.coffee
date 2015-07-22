@@ -88,7 +88,6 @@ ProjectCredentialsConfig.create()
     .describe 't', 'CSV template file name'
     .nargs 't', 1
     .alias 't', 'template'
-    .demand 't'
 
     .describe 'o', 'CSV output file name'
     .nargs 'o', 1

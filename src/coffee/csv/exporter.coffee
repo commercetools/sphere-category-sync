@@ -4,6 +4,7 @@ fs = require 'fs'
 csv = require 'csv'
 stringify = require 'csv-stringify'
 transform = require 'stream-transform'
+CONS = require './constants'
 ExportMapping = require './exportmapping'
 Streaming = require '../streaming'
 {SphereClient} = require 'sphere-node-sdk'
@@ -19,10 +20,7 @@ class Exporter
       parser = csv.parse
         delimiter: ','
         columns: (rawHeader) =>
-          @mapping = new ExportMapping rawHeader, @options
-          errors = @mapping.validate()
-          throw { errors } if _.size errors
-          @write [rawHeader] # pass array of array to ensure newline in CSV
+          @_initMapping rawHeader
           rawHeader
       parser.on 'error', (error) ->
         reject error
@@ -35,6 +33,24 @@ class Exporter
 
       stream.pipe(parser)
 
+  _initMapping: (rawHeader) ->
+    @mapping = new ExportMapping rawHeader, @options
+    errors = @mapping.validate()
+    throw { errors } if _.size errors
+    @write [rawHeader] # pass array of array to ensure newline in CSV
+
+  defaultTemplate: ->
+    new Promise (resolve, reject) =>
+      header = CONS.BASE_HEADERS
+      @client.project.fetch()
+      .then (prj) =>
+        header = header.concat _.each prj.body.languages, (l) ->
+          foo = _.map CONS.LOCALIZED_HEADERS, (h) ->
+            "#{h}.#{l}"
+
+        @_initMapping header
+        resolve 'Default header created'
+
   run: (templateFileName, outPutFileName) ->
     new Promise (resolve, reject) =>
       @stream = fs.createWriteStream outPutFileName
@@ -43,8 +59,12 @@ class Exporter
       @stream.on 'error', (error) ->
         reject error
 
-      @loadTemplate templateFileName
-      .catch (error) ->
+      promise = if templateFileName
+        @loadTemplate templateFileName
+      else
+        @defaultTemplate()
+
+      promise.catch (error) ->
         reject error
       .then =>
 

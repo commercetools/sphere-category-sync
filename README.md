@@ -63,16 +63,17 @@ The `import` sub-command will never delete a category.
 
 ## Export
 
-To export categories, you need to pass a CSV file containing only a header row as template.
+To export categories, you can pass a CSV file as template. The template needs to contain only the header.
 This will allow you to define the content of the output file to your specific needs.
 Please have a look at the [CSV Format section](#csv-format) for the different headers supported.
+If you don't provide a template, the tools will export all possible information in the languages defined in the project.
 
 The command line to export categories into a CSV file is:
 ```
 Usage: bin/category-sync -p <project-key> [options] export -t <CSV file> -o <CSV file>
 
 Options:
-  -t, --template  CSV template file name                              [required]
+  -t, --template  CSV template file name
   -o, --output    CSV output file name                                [required]
 
 Examples:
@@ -80,6 +81,10 @@ Examples:
   export -t header.csv -o output.csv          project with key "my-project-42"
                                               into "output.csv" file using the
                                               template "header.csv".
+
+  bin/category-sync -p the-project-1          Export categories from SPHERE
+  export -o my.csv                            project with key "the-project-1"
+                                              into "my.csv".
 ```
 
 ## Resolving parent category
