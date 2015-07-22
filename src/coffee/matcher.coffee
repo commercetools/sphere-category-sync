@@ -57,7 +57,7 @@ class Matcher
   getIdFromCache: (parent) ->
     if @parentBy is CONS.HEADER_SLUG
       @slug2IdMap[parent.id]
-    if @parentBy is CONS.HEADER_EXTERNAL_ID
+    else if @parentBy is CONS.HEADER_EXTERNAL_ID
       @externalId2IdMap[parent.id]
     else
       parent.id
@@ -65,7 +65,7 @@ class Matcher
   fetchRef: (parent) ->
     if @parentBy is CONS.HEADER_SLUG
       @apiClient.getBySlugs [parent.id], @language
-    if @parentBy is CONS.HEADER_EXTERNAL_ID
+    else if @parentBy is CONS.HEADER_EXTERNAL_ID
       @apiClient.getByExternalIds [parent.id]
     else
       @apiClient.byId parent.Id
