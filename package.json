@@ -22,9 +22,9 @@
     }
   ],
   "bin": {
-    "category-sync": "bin/category-sync"
+    "category-sync": "./bin/category-sync"
   },
-  "main": "./lib",
+  "main": "./lib/run",
   "engines": {
     "node": ">= 0.10.0"
   },

@@ -130,10 +130,13 @@ Different languages for the same attribute are defined by a suffix to the actual
 
 # Setup
 
-* Install [NodeJS](http://support.sphere.io/knowledgebase/articles/307722-install-nodejs-and-get-a-component-running) (platform for running application)
-* Download the ready to use application as [ZIP](https://github.com/sphereio/sphere-category-sync/archive/latest.zip)
-* Extract the latest.zip with `unzip sphere-category-sync-latest.zip`
-* Change into the directory `cd sphere-category-sync-latest`
+If you just want to use the tool, we recommend to use [SPHERE.IO's impex platform](https://impex.sphere.io) to avoid any local installation - you only need your browser.
+
+Nevertheless, running the program locally, you need [NodeJS](https://nodejs.org/download/) installed and simply run the following command in your terminal:
+
+```bash
+npm install sphere-category-sync
+```
 
 # Development
 
