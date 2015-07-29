@@ -44,8 +44,8 @@ class Exporter
       header = CONS.BASE_HEADERS
       @client.project.fetch()
       .then (prj) =>
-        header = header.concat _.each prj.body.languages, (l) ->
-          foo = _.map CONS.LOCALIZED_HEADERS, (h) ->
+        _.each prj.body.languages, (l) ->
+          header = header.concat _.map CONS.LOCALIZED_HEADERS, (h) ->
             "#{h}.#{l}"
 
         @_initMapping header

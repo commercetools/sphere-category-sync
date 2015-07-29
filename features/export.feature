@@ -28,6 +28,12 @@ Feature: Export categories
     And the file "output1.csv" should match /^name.en,slug.en$/
     And the file "output1.csv" should match /^Some Export Category,some-export-category$/
 
+  Scenario: Export works without template
+    When I run `../../bin/category-sync -p import-101-64 export -o no-template.csv`
+    Then the exit status should be 0
+    Then a file named "no-template.csv" should exist
+    And the file "no-template.csv" should match /^id,externalId,parentId,orderHint,createdAt,lastModifiedAt,name.de,description.de,slug.de,metaTitle.de,metaDescription.de,metaKeywords.de$/
+
   Scenario: Use externalId for parentId during Export
     Given a file named "single.csv" with:
     """
