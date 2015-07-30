@@ -8,14 +8,13 @@ node_js:
 before_script:
 - npm install -g grunt-cli
 - ./create_config.sh
-- gem install cucumber
-- gem install aruba -v 0.7.4
+- gem install cucumber aruba
 script:
 - npm test
 - cucumber -t ~@wip
 notifications:
   hipchat:
-    rooms: 
+    rooms:
     template:
     - '%{repository}#%{build_number} (%{author}): %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Compare</a>)'
     format: html

@@ -2,7 +2,7 @@ Feature: Import categories
 
   @wip
   Scenario: Error on wrong file
-    When I run `../../bin/category-sync -p import-101-64 import -f not_here.csv`
+    When I run `category-sync -p import-101-64 import -f not_here.csv`
     Then the exit status should be 1
     And the output should contain "Error: ENOENT, open 'not_here.csv'"
 
@@ -12,7 +12,7 @@ Feature: Import categories
     name.en,slug.en
     Some Category,some-category
     """
-    When I run `../../bin/category-sync -p import-101-64 import -f single.csv`
+    When I run `category-sync -p import-101-64 import -f single.csv`
     Then the exit status should be 0
     And the output should contain "Processing '1' category"
     And the output should contain "Import done."
@@ -24,7 +24,7 @@ Feature: Import categories
     rootCat,Root Category,root-category,
     subCat,Sub Category,sub-category,rootCat
     """
-    When I run `../../bin/category-sync -p import-101-64 import -f simple-tree.csv`
+    When I run `category-sync -p import-101-64 import -f simple-tree.csv`
     Then the exit status should be 0
     And the output should contain "Found parent for 'rootCat' using externalId (language: en)."
     And the output should contain "Import done."
@@ -38,7 +38,7 @@ Feature: Import categories
     Sub Sub Category 1,x,sub-category-slug
     Sub Sub Category 2,y,sub-category-slug
     """
-    When I run `../../bin/category-sync -p import-101-64 import --parentBy slug -f import-by-slug.csv`
+    When I run `category-sync -p import-101-64 import --parentBy slug -f import-by-slug.csv`
     Then the exit status should be 0
     And the output should contain "Found parent for 'root-slug' using slug (language: en)."
     And the output should contain "Found parent for 'sub-category-slug' using slug (language: en)."
@@ -50,7 +50,7 @@ Feature: Import categories
     name.en,slug.en,parentId
     A Category,a-slug,Not Existing!!!
     """
-    When I run `../../bin/category-sync --continueOnProblems -p import-101-64 import -f problem.csv`
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f problem.csv`
     Then the exit status should be 0
     And the output should contain "Could not resolve parent for 'Not Existing!!!' using externalId (language: en)."
     And the output should contain "Import done."
