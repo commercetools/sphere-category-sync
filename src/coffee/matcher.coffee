@@ -57,8 +57,8 @@ class Matcher
             msg = "Problem on resolving #{msgAppendix}: #{err}"
             @logger.warn msg
             reject msg
-
-      resolve category
+      else
+        resolve category
 
   getIdFromCache: (parentByValue) ->
     if @parentBy is CONS.HEADER_SLUG
