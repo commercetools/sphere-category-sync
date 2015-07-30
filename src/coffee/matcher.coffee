@@ -46,7 +46,7 @@ class Matcher
         else
           @fetchRef(parentByValue)
           .then (result) =>
-            if result.body.count is 1
+            if result.body.total is 1
               @logger.info "Found #{msgAppendix} - by fetching"
               _resolve category, result.body.results[0].id
             else
