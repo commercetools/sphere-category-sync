@@ -24,7 +24,7 @@ class ApiClient
     quotedSlugs = _.map slugs, (slug) -> "\"#{slug}\""
     @client.categories
     .all()
-    .where("slug(#{language} in (#{slugs.join(', ')}))")
+    .where("slug(#{language} in (#{quotedSlugs.join(', ')}))")
     .fetch()
 
   update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
