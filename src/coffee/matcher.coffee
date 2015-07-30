@@ -37,38 +37,44 @@ class Matcher
         delete cat.parent._rawParentId
         resolve cat
       if category.parent
-        parentId = @getIdFromCache category.parent
-        msgAppendix = "parent for '#{category.parent.id}' using #{@parentBy} (language: #{@language})."
+        parentByValue = category.parent.id
+        msgAppendix = "parent for '#{parentByValue}' using #{@parentBy} (language: #{@language})."
+        parentId = @getIdFromCache parentByValue
         if parentId
-          @logger.info "Found #{msgAppendix}"
+          @logger.info "Found #{msgAppendix} - in cache"
           _resolve category, parentId
         else
-          @fetchRef(category.parent)
-          .then (result) ->
+          @fetchRef(parentByValue)
+          .then (result) =>
             if result.body.count is 1
+              @logger.info "Found #{msgAppendix} - by fetching"
               _resolve category, result.body.results[0].id
             else
-              reject "Could not resolve #{msgAppendix}"
-          .catch (err) ->
-            reject "Problem in resolving #{msgAppendix}: #{err}"
+              msg = "Could not resolve #{msgAppendix}"
+              @logger.warn msg
+              reject msg
+          .catch (err) =>
+            msg = "Problem on resolving #{msgAppendix}: #{err}"
+            @logger.warn msg
+            reject msg
 
       resolve category
 
-  getIdFromCache: (parent) ->
+  getIdFromCache: (parentByValue) ->
     if @parentBy is CONS.HEADER_SLUG
-      @slug2IdMap[parent.id]
+      @slug2IdMap[parentByValue]
     else if @parentBy is CONS.HEADER_EXTERNAL_ID
-      @externalId2IdMap[parent.id]
+      @externalId2IdMap[parentByValue]
     else
-      parent.id
+      parentByValue
 
-  fetchRef: (parent) ->
+  fetchRef: (parentByValue) ->
     if @parentBy is CONS.HEADER_SLUG
-      @apiClient.getBySlugs [parent.id], @language
+      @apiClient.getBySlugs [parentByValue], @language
     else if @parentBy is CONS.HEADER_EXTERNAL_ID
-      @apiClient.getByExternalIds [parent.id]
+      @apiClient.getByExternalIds [parentByValue]
     else
-      @apiClient.byId parent.Id
+      @apiClient.byId parentByValue
 
   match: (category) ->
     new Promise (resolve, reject) =>
