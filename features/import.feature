@@ -52,6 +52,5 @@ Feature: Import categories
     """
     When I run `../../bin/category-sync --continueOnProblems -p import-101-64 import -f problem.csv`
     Then the exit status should be 0
-    And the output should contain "Request body does not contain valid JSON."
-    And the output should contain "- ignored!"
+    And the output should contain "Could not resolve parent for 'Not Existing!!!' using externalId (language: en)."
     And the output should contain "Import done."
