@@ -27,6 +27,13 @@ class Streaming
       .then =>
         posts = _.map categoryList, (category) =>
           @matcher.resolveParent(category)
+          .catch (err) =>
+            if @continueOnProblems
+              msg = "#{err} - ignored!"
+              @logger.info msg
+              Promise.resolve msg
+            else
+              Promise.reject err
           .then (cat) =>
             @matcher.match(cat)
             .then (existingCategory) =>
