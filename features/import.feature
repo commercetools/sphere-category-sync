@@ -54,3 +54,25 @@ Feature: Import categories
     Then the exit status should be 0
     And the output should contain "Could not resolve parent for 'Not Existing!!!' using externalId (language: en)."
     And the output should contain "Import done."
+
+  Scenario: Import loop
+    Given a file named "loop.csv" with:
+    """
+    name.en,slug.en,externalId,parentId
+    Sub Sub,slug1,sub-sub42,sub42
+    Sub,slug2,sub42,root42
+    Root,slug3,root42
+    """
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv`
+    Then the exit status should be 0
+    And the output should contain "Could not resolve parent for 'sub42' using externalId (language: en). - ignored!"
+    And the output should contain "Could not resolve parent for 'root42' using externalId (language: en). - ignored!"
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv`
+    Then the exit status should be 0
+    And the output should contain "Could not resolve parent for 'sub42' using externalId (language: en). - ignored!"
+    And the output should contain "Found parent for 'root42' using externalId"
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv`
+    Then the exit status should be 0
+    And the output should contain "Found parent for 'sub42' using externalId"
+    And the output should contain "Found parent for 'root42' using externalId"
+    And the output should contain "Import done."

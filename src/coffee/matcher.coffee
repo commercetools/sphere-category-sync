@@ -7,6 +7,7 @@ class Matcher
   constructor: (@logger, @apiClient, options = {}) ->
     @parentBy = options.parentBy
     @language = options.language
+    @continueOnProblems = options.continueOnProblems
     @slug2IdMap = {}
     @externalId2IdMap = {}
     @currentCandidates = []
@@ -51,8 +52,12 @@ class Matcher
               _resolve category, result.body.results[0].id
             else
               msg = "Could not resolve #{msgAppendix}"
-              @logger.warn msg
-              reject msg
+              if @continueOnProblems
+                @logger.info "#{msg} - ignored!"
+                resolve()
+              else
+                @logger.info msg
+                reject msg
           .catch (err) =>
             msg = "Problem on resolving #{msgAppendix}: #{err}"
             @logger.warn msg

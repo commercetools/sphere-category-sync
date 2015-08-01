@@ -27,27 +27,21 @@ class Streaming
       .then =>
         posts = _.map categoryList, (category) =>
           @matcher.resolveParent(category)
-          .catch (err) =>
-            if @continueOnProblems
-              msg = "#{err} - ignored!"
-              @logger.info msg
-              Promise.resolve msg
-            else
-              Promise.reject err
           .then (cat) =>
-            @matcher.match(cat)
-            .then (existingCategory) =>
-              if existingCategory
-                @apiClient.update(cat, existingCategory, @actionsToIgnore)
-              else
-                @apiClient.create(cat)
-                .then (result) =>
-                  # remember id of created category for faster parent match
-                  if result.body
-                    @matcher.addMapping result.body
-                  else
-                    @logger.warn result
-                  Promise.resolve result
+            if cat
+              @matcher.match(cat)
+              .then (existingCategory) =>
+                if existingCategory
+                  @apiClient.update(cat, existingCategory, @actionsToIgnore)
+                else
+                  @apiClient.create(cat)
+                  .then (result) =>
+                    # remember id of created category for faster parent match
+                    if result.body
+                      @matcher.addMapping result.body
+                    else
+                      @logger.warn result
+                    Promise.resolve result
         Promise.all posts
 
     , {concurrency: 1} # run 1 batch at a time
