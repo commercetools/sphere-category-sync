@@ -24,7 +24,7 @@
   "bin": {
     "category-sync": "./bin/category-sync"
   },
-  "main": "./lib/run",
+  "main": "./lib",
   "engines": {
     "node": ">= 0.10.0"
   },
