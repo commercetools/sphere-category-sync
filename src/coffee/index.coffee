@@ -1,2 +1,2 @@
 module.exports =
-  CategoryImporter: require './streaming'
+  CategoryImport: require './streaming'
