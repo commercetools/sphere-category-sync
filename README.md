@@ -129,6 +129,21 @@ Please find some examples in the [data](https://github.com/sphereio/sphere-categ
 
 Please note that there is no order in the header.
 
+## JSON Format
+
+We support importing categories from JSON file. The import file should be in compliance with the schema defined [here](https://github.com/sphereio/sphere-json-schemas/blob/master/schema/category.schema.json)
+For importing JSON file, please use the [cli](https://github.com/sphereio/sphere-node-cli)
+Expected configuration options are:
+- language: (en / de) localization language 
+- parentBy: (externalId, slug)
+
+A sample cli command is as follows:
+
+```bash
+./bin/sphere import -p my-project-key -t category -f testCategories.json -c '{"language":"de", "parentBy":"externalId"}'
+#
+```
+
 ### Localized attributes
 
 Different languages for the same attribute are defined by a suffix to the actual header delimited by a `.` - examples are `name.de` or `slug.en`. You may define as many languages as you want for those attributes.
