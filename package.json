@@ -32,7 +32,8 @@
     "build": "grunt build",
     "test": "grunt test",
     "coverage": "grunt coverage",
-    "watch:test": "grunt watch:test"
+    "watch:test": "grunt watch:test",
+    "release": "grunt release"
   },
   "dependencies": {
     "bluebird": "2.9.34",
