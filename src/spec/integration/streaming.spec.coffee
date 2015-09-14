@@ -40,7 +40,8 @@ describe 'Streaming', ->
       chunk = [
         { name: { en: 'myCat1' }, slug: { en: 'my-cat-1' }}
       ]
-      @streaming.processStream chunk, ->
+      @streaming.processStream chunk, =>
+        expect(@streaming.summaryReport()).toEqual 'Summary: there were 1 imported categories (1 were new and 0 were updates)'
         done()
 
     it 'should update an existing category', (done) ->
@@ -52,7 +53,8 @@ describe 'Streaming', ->
         chunk = [
           { externalId: '42', name: { en: 'myCatCHANGED' }, slug: { en: 'my-cat-3' }, orderHint: '0.1' }
         ]
-        @streaming.processStream chunk, ->
+        @streaming.processStream chunk, =>
+          expect(@streaming.summaryReport()).toEqual 'Summary: there were 2 imported categories (2 were new and 0 were updates)'
           done()
 
     it 'should create a tree of categories', (done) ->
@@ -63,5 +65,6 @@ describe 'Streaming', ->
         chunk = [
           { externalId: 'l1', name: { en: 'level1' }, slug: { en: 'l-1' }, parent: { id: 'root' }}
         ]
-        @streaming.processStream chunk, ->
+        @streaming.processStream chunk, =>
+          expect(@streaming.summaryReport()).toEqual 'Summary: there were 2 imported categories (2 were new and 0 were updates)'
           done()
