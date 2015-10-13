@@ -20,6 +20,11 @@ yargs = require 'yargs'
 
   .describe 'accessToken', 'an OAuth access token for the SPHERE.IO API'
 
+  .describe 'sphereHost', 'SPHERE.IO API host to connecto to'
+  .describe 'sphereProtocol', 'SPHERE.IO API protocol to connect to'
+  .describe 'sphereAuthHost', 'SPHERE.IO OAuth host to connect to'
+  .describe 'sphereAuthProtocol', 'SPHERE.IO OAuth protocol to connect to'
+
   .describe 'language', 'Language used for slugs when referencing parent.'
   .nargs 'language', 1
   .default 'language', 'en'
@@ -79,6 +84,13 @@ ensureCredentials(argv)
     language: language
     parentBy: parentBy
     continueOnProblems: continueOnProblems
+
+  options.host = argv.sphereHost if argv.sphereHost
+  options.protocol = argv.sphereProtocol if argv.sphereProtocol
+  if argv.sphereAuthHost
+    options.oauth_host = argv.sphereAuthHost
+    options.rejectUnauthorized = false
+  options.oauth_protocol = argv.sphereAuthProtocol if argv.sphereAuthProtocol
 
   if command is 'import'
     yargs.reset()
