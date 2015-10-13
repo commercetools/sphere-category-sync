@@ -1,3 +1,4 @@
+_ = require 'underscore'
 Importer = require '../lib/csv/importer'
 Exporter = require '../lib/csv/exporter'
 package_json = require '../package.json'
@@ -14,6 +15,8 @@ yargs = require 'yargs'
 
   .describe 's', 'client secret'
   .alias 's', 'client-secret'
+
+  .describe 'accessToken', 'an OAuth access token for the SPHERE.IO API'
 
   .describe 'language', 'Language used for slugs when referencing parent.'
   .nargs 'language', 1
@@ -53,12 +56,27 @@ logger = new ExtendedLogger
       { level: 'info', stream: process.stdout }
     ]
 
-ProjectCredentialsConfig.create()
-.then (config) ->
-  credentials = config.enrichCredentials
-    project_key: project_key
-    client_id: argv.i
-    client_secret: argv.s
+ensureCredentials = (argv) ->
+  if argv.accessToken
+    Promise.resolve
+      config:
+        project_key: argv.projectKey
+      access_token: argv.accessToken
+  else
+    ProjectCredentialsConfig.create()
+    .then (credentials) ->
+      Promise.resolve
+        config: credentials.enrichCredentials
+          project_key: argv.projectKey
+          client_id: argv.clientId
+          client_secret: argv.clientSecret
+
+ensureCredentials(argv)
+.then (credentials) ->
+  options = _.extend credentials,
+    language: language
+    parentBy: parentBy
+    continueOnProblems: continueOnProblems
 
   if command is 'import'
     yargs.reset()
@@ -71,11 +89,7 @@ ProjectCredentialsConfig.create()
     .demand 'f'
     .argv
 
-    im = new Importer logger,
-      config: credentials
-      language: language
-      parentBy: parentBy
-      continueOnProblems: continueOnProblems
+    im = new Importer logger, options
     im.run argv.f
     .then (result) ->
       logger.info result
@@ -95,11 +109,7 @@ ProjectCredentialsConfig.create()
     .demand 'o'
     .argv
 
-    ex = new Exporter logger,
-      config: credentials
-      language: language
-      parentBy: parentBy
-      continueOnProblems: continueOnProblems
+    ex = new Exporter logger, options
     ex.run argv.t, argv.o
 
   else
