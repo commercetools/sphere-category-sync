@@ -2,7 +2,9 @@ _ = require 'underscore'
 Importer = require '../lib/csv/importer'
 Exporter = require '../lib/csv/exporter'
 package_json = require '../package.json'
+Promise = require 'bluebird'
 {ProjectCredentialsConfig,ExtendedLogger} = require 'sphere-node-utils'
+
 
 yargs = require 'yargs'
   .usage 'Usage: $0 <command> [options]'
