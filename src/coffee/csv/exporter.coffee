@@ -78,7 +78,6 @@ class Exporter
               resolve result
 
         @client.categories
-        .all()
         .expand('parent')
         .process(processChunk, {accumulate: false})
         .then (result) =>
