@@ -13,6 +13,7 @@ class Importer
     @streaming = new Streaming @logger, options
 
   run: (fileName) ->
+    rowCount = 2
     new Promise (resolve, reject) =>
       input = fs.createReadStream fileName
       input.on 'error', (error) ->
@@ -37,14 +38,16 @@ class Importer
 
       __(input).pipe(parser).pipe(transformer).pipe(
         transform (chunk, cb) =>
+          console.log "Process row: " + rowCount
           @logger.debug 'chunk: ', chunk, {}
           @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
+          rowCount++
         , {parallel: 1})
 
   createCategory: (row) ->
     @logger.debug 'create JSON category for row: ', row
     json = @mapping.toJSON row
-    @logger.debug 'generated JSON categor: ', json
+    @logger.debug 'generated JSON category: ', json
     json
 
 module.exports = Importer

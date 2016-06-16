@@ -60,7 +60,7 @@ logger = new ExtendedLogger
   logConfig:
     name: "#{package_json.name}-#{package_json.version}"
     streams: [
-      { level: 'info', stream: process.stdout }
+      { level: 'warn', stream: process.stdout }
     ]
 
 ensureCredentials = (argv) ->
