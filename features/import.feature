@@ -4,7 +4,8 @@ Feature: Import categories
   Scenario: Error on wrong file
     When I run `category-sync -p import-101-64 import -f not_here.csv`
     Then the exit status should be 1
-    And the output should contain "Error: ENOENT, open 'not_here.csv'"
+    And the output should contain "Error: ENOENT"
+    And the output should contain "open 'not_here.csv'"
 
   Scenario: Import a single category from a CSV file
     Given a file named "single.csv" with:
