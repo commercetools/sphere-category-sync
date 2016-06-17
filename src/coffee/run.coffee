@@ -37,6 +37,9 @@ yargs = require 'yargs'
   .boolean 'continueOnProblems'
   .default 'continueOnProblems', false
 
+  .describe 'debug', 'Enable debug mode'
+  .describe 'verbose', 'Enable verbose mode'
+
   .command 'export', 'Export categories'
   .command 'import', 'Import categories'
 
@@ -59,9 +62,16 @@ logger = new ExtendedLogger
     project_key: project_key
   logConfig:
     name: "#{package_json.name}-#{package_json.version}"
-    streams: [
-      { level: 'info', stream: process.stdout }
-    ]
+  loglevel = if argv.verbose
+    'info'
+  else if argv.debug
+    'debug'
+  else
+    'warn'
+
+  streams = [
+    {level: loglevel, stream: process.stdout}
+  ]
 
 ensureCredentials = (argv) ->
   if argv.accessToken

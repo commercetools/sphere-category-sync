@@ -9,6 +9,10 @@ class Header
     if @rawHeader.length isnt _.unique(@rawHeader).length
       errors.push "There are duplicate header entries!"
 
+    _.each @rawHeader, (header, index) ->
+      if header.trim() != header
+        errors.push "Header '#{header}' contains a padding whitespace!"
+
     @_toLanguageIndex()
     @_toIndex()
 

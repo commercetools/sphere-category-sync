@@ -3,7 +3,8 @@ Feature: Export categories
   Scenario: Error on wrong template file
     When I run `category-sync -p import-101-64 export -t not_here.csv -o output.csv`
     Then the exit status should be 1
-    And the output should contain "Error: ENOENT, open 'not_here.csv'"
+    And the output should contain "Error: ENOENT"
+    And the output should contain "open 'not_here.csv'"
 
   Scenario: Error on unwriteable output
     Given a file named "template.csv" with:
@@ -12,7 +13,8 @@ Feature: Export categories
     """
     When I run `category-sync -p import-101-64 export -t template.csv -o /output.csv`
     Then the exit status should be 1
-    And the output should contain "Error: EACCES, open '/output.csv'"
+    And the output should contain "Error: EACCES"
+    And the output should contain "open '/output.csv'"
 
   Scenario: Export category to a CSV file
     Given a file named "single.csv" with:
@@ -74,12 +76,11 @@ Feature: Export categories
 
     Given a file named "template.csv" with:
     """
-    id,createdAt,lastModifiedAt,parentId
+    externalId,id,createdAt,lastModifiedAt,parentId
     """
     When I run `category-sync -p import-101-64 --parentBy slug export -t template.csv -o output2.csv`
     Then the exit status should be 0
     Then a file named "output2.csv" should exist
-    And the file "output2.csv" should match /^id,createdAt,lastModifiedAt,parentId$/
-    And the file "output2.csv" should match /^[a-z,0-9,\-]{36},[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}Z,[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}Z,nice-stuff$/
-    # And the file "output2.csv" should match /^[a-z,0-9,\-]{36},.*,.*,old-stuff$/
-
+    And the file "output2.csv" should match /^externalId,id,createdAt,lastModifiedAt,parentId$/
+    And the file "output2.csv" should match /^exId2,[a-z,0-9,\-]{36},[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}Z,[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}Z,nice-stuff$/
+    And the file "output2.csv" should match /^exId1,[a-z,0-9,\-]{36},[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}Z,[0-9]{4}-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9]{3}Z,$/
