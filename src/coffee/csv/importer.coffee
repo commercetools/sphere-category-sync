@@ -38,11 +38,12 @@ class Importer
 
       __(input).pipe(parser).pipe(transformer).pipe(
         transform (chunk, cb) =>
+          chunkSize = 1
           console.log "Process row: " + rowCount
           @logger.debug 'chunk: ', chunk, {}
           @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
-          rowCount++
-        , {parallel: 1})
+          rowCount = rowCount + chunkSize
+        , {parallel: chunkSize})
 
       console.log @streaming.summaryReport
 
