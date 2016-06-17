@@ -37,8 +37,8 @@ class Importer
       , {parallel: 10}
 
       __(input).pipe(parser).pipe(transformer).pipe(
+        chunkSize = 1
         transform (chunk, cb) =>
-          chunkSize = 1
           console.log "Process row: " + rowCount
           @logger.debug 'chunk: ', chunk, {}
           @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
