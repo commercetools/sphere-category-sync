@@ -45,8 +45,6 @@ class Importer
           rowCount = rowCount + chunkSize
         , {parallel: chunkSize})
 
-      console.log @streaming.summaryReport
-
   createCategory: (row) ->
     @logger.debug 'create JSON category for row: ', row
     json = @mapping.toJSON row

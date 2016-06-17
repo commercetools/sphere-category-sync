@@ -48,7 +48,7 @@ yargs = require 'yargs'
 
   .version package_json.version
 
-  .epilog 'copyright 2015'
+  .epilog 'copyright 2015-2016'
 
 argv = yargs.argv
 command = argv._[0]
@@ -57,21 +57,21 @@ language = argv.language
 parentBy = argv.parentBy
 continueOnProblems = argv.continueOnProblems
 
+loglevel = if argv.verbose
+  'info'
+else if argv.debug
+  'debug'
+else
+  'warn'
+
 logger = new ExtendedLogger
   additionalFields:
     project_key: project_key
   logConfig:
     name: "#{package_json.name}-#{package_json.version}"
-  loglevel = if argv.verbose
-    'info'
-  else if argv.debug
-    'debug'
-  else
-    'warn'
-
-  streams = [
-    {level: loglevel, stream: process.stdout}
-  ]
+    streams: [
+      {level: loglevel, stream: process.stdout}
+    ]
 
 ensureCredentials = (argv) ->
   if argv.accessToken
