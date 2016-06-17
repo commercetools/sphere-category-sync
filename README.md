@@ -22,9 +22,9 @@ Commands:
   import    Import categories
 
 Options:
-  -p, --project-key    project key         [required]
-  -i, --client-id      client id
-  -s, --client-secret  client secret
+  -p, --project-key     project key         [required]
+  -i, --client-id       client id
+  -s, --client-secret   client secret
   --language            Language used for slugs when referencing parent.
                                                                  [default: "en"]
   --parentBy            Property used to reference parent - use externalId or
@@ -32,8 +32,10 @@ Options:
   --continueOnProblems  Continue with creating/updating further categories even
                         if API returned with 400 status code.
                                                       [boolean] [default: false]
-  -h, --help           Show help
-  --version            Show version number
+  -h, --help            Show help
+  --verbose             Add more information regarding the current run
+  --debug               Add information to debug
+  --version             Show version number
 ```
 The tool uses the API to talk to SPHERE.IO and therefore needs the 3 access properties - `project key`, `client id` and `client secret`. For automation reason you may use our [project credentials files](https://github.com/sphereio/sphere-node-utils#projectcredentialsconfig) to avoid passing the credentials via command line options.
 
@@ -134,7 +136,7 @@ Please note that there is no order in the header.
 We support importing categories from JSON file. The import file should be in compliance with the schema defined [here](https://github.com/sphereio/sphere-json-schemas/blob/master/schema/category.schema.json)
 For importing JSON file, please use the [cli](https://github.com/sphereio/sphere-node-cli)
 Expected configuration options are:
-- language: (en / de) localization language 
+- language: (en / de) localization language
 - parentBy: (externalId, slug)
 
 A sample cli command is as follows:
