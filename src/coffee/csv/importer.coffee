@@ -36,8 +36,8 @@ class Importer
         callback null, category
       , {parallel: 10}
 
+      chunkSize = 1
       __(input).pipe(parser).pipe(transformer).pipe(
-        chunkSize = 1
         transform (chunk, cb) =>
           console.log "Process row: " + rowCount
           @logger.debug 'chunk: ', chunk, {}
