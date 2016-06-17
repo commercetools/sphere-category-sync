@@ -12,7 +12,7 @@ Feature: Import categories
     name.en,slug.en
     Some Category,some-category
     """
-    When I run `category-sync -p import-101-64 import -f single.csv`
+    When I run `category-sync -p import-101-64 import -f single.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Processing '1' category"
     And the output should contain "Import done."
@@ -24,7 +24,7 @@ Feature: Import categories
     rootCat,Root Category,root-category,
     subCat,Sub Category,sub-category,rootCat
     """
-    When I run `category-sync -p import-101-64 import -f simple-tree.csv`
+    When I run `category-sync -p import-101-64 import -f simple-tree.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Found parent for 'rootCat' using externalId (language: en)."
     And the output should contain "Import done."
@@ -38,7 +38,7 @@ Feature: Import categories
     Sub Sub Category 1,x,sub-category-slug
     Sub Sub Category 2,y,sub-category-slug
     """
-    When I run `category-sync -p import-101-64 import --parentBy slug -f import-by-slug.csv`
+    When I run `category-sync -p import-101-64 import --parentBy slug -f import-by-slug.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Found parent for 'root-slug' using slug (language: en)."
     And the output should contain "Found parent for 'sub-category-slug' using slug (language: en)."
@@ -50,7 +50,7 @@ Feature: Import categories
     name.en,slug.en,parentId
     A Category,a-slug,Not Existing!!!
     """
-    When I run `category-sync --continueOnProblems -p import-101-64 import -f problem.csv`
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f problem.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Could not resolve parent for 'Not Existing!!!' using externalId (language: en)."
     And the output should contain "Import done."
@@ -63,15 +63,15 @@ Feature: Import categories
     Sub,slug2,sub42,root42
     Root,slug3,root42
     """
-    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv`
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Could not resolve parent for 'sub42' using externalId (language: en). - ignored!"
     And the output should contain "Could not resolve parent for 'root42' using externalId (language: en). - ignored!"
-    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv`
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Could not resolve parent for 'sub42' using externalId (language: en). - ignored!"
     And the output should contain "Found parent for 'root42' using externalId"
-    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv`
+    When I run `category-sync --continueOnProblems -p import-101-64 import -f loop.csv --verbose`
     Then the exit status should be 0
     And the output should contain "Found parent for 'sub42' using externalId"
     And the output should contain "Found parent for 'root42' using externalId"

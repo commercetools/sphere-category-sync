@@ -43,6 +43,7 @@ class Importer
           @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
           rowCount++
         , {parallel: 1})
+      console.log @streaming.summaryReport
 
   createCategory: (row) ->
     @logger.debug 'create JSON category for row: ', row
