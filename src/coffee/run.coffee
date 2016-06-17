@@ -62,18 +62,16 @@ logger = new ExtendedLogger
     project_key: project_key
   logConfig:
     name: "#{package_json.name}-#{package_json.version}"
-  if argv.verbose
-    streams = [
-      {level: 'info', stream: process.stdout}
-    ]
+  loglevel = if argv.verbose
+    'info'
   else if argv.debug
-    streams = [
-      {level: 'debug', stream: process.stdout}
-    ]
+    'debug'
   else
-    streams: [
-      { level: 'warn', stream: process.stdout }
-    ]
+    'warn'
+
+  streams = [
+    {level: loglevel, stream: process.stdout}
+  ]
 
 ensureCredentials = (argv) ->
   if argv.accessToken
