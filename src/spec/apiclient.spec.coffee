@@ -21,7 +21,7 @@ describe 'ApiClient', ->
   describe '#create', ->
     it 'should POST a new category', ->
       spyOn(@apiClient.client.categories, 'create').andCallFake -> Promise.resolve()
-      @apiClient.create { name: 'myCat' }, { sourceInfo: 'row 7' }
+      @apiClient.create( { name: 'myCat' }, { sourceInfo: 'row 7' } )
       expect(@apiClient.client.categories.create).toHaveBeenCalled()
 
     it 'should do nothing when in dryRun mode', (done) ->
