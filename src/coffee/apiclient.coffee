@@ -46,6 +46,10 @@ class ApiClient
         .byId(actionsToSync.getUpdateId())
         .update(actionsToSync.getUpdatePayload())
         .then (result) ->
+          if result.body.externalId
+            console.log "Category with externalId " + result.body.externalId + " updated."
+          else
+            console.log "Category updated."
           resolve "[#{context.sourceInfo}] Category updated."
         .catch (err) =>
           if err.code is 400
@@ -69,6 +73,10 @@ class ApiClient
       else
         @client.categories.create(category)
         .then (result) ->
+          if result.body.externalId
+            console.log "Category with externalId " + result.body.externalId + " created."
+          else
+            console.log "Category created."
           resolve result
         .catch (err) =>
           if err.code is 400
@@ -86,6 +94,10 @@ class ApiClient
     new Promise (resolve, reject) =>
       @client.categories.byId(category.id).delete(category.version)
       .then ->
+        if result.body.externalId
+          console.log "Category with externalId " + result.body.externalId + " deleted."
+        else
+          console.log "Category deleted."
         resolve "[#{context.sourceInfo}] Category deleted."
       .catch (err) ->
         reject "[#{context.sourceInfo}] Error on deleting category:\n#{_.prettify err.body}"
