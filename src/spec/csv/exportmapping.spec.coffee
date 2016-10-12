@@ -52,6 +52,21 @@ describe 'ExportMapping', ->
           de: 'Hallo'
       expect(json).toEqual [ 'ciao', 'Hallo' ]
 
+    it 'should support region subtags', ->
+      ex = new ExportMapping [ 'slug.nl', 'name.nl-BE' ]
+      ex.validate()
+      expect(_.size ex.index2CsvFn).toBe 2
+      expect(_.isFunction(ex.index2CsvFn[0])).toBe true
+      expect(_.isFunction(ex.index2CsvFn[1])).toBe true
+      json = ex.toCSV
+        slug:
+          'en-US': 'ciao'
+          'nl': 'slak'
+        name:
+          'nl-BE': 'alee'
+          'de': 'hallo'
+      expect(json).toEqual [ 'slak', 'alee' ]
+
     it 'should not map an empty localized entry', ->
       ex = new ExportMapping [ 'slug.de', 'name.it' ]
       ex.validate()
