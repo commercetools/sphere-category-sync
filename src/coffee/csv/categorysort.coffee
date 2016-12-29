@@ -23,7 +23,7 @@ class CategorySort
 
     # if parentBy is externalId or ID just return value from a row by headerIndex
     if cons.HEADER_SLUG == parentBy
-      parentBy = cons.HEADER_SLUG+'.'+@options.language
+      parentBy = cons.HEADER_SLUG + '.' + @options.language
 
     @getValueByHeader(row, header, parentBy)
 
@@ -75,7 +75,7 @@ class CategorySort
 
       if data.length == dataToProcess.length and dataToProcess.length
         @logger.debug("SortingCycle::Could not find parents anymore,"
-          + " flushing the res of #{dataToProcess.length} rows")
+          +" flushing the res of #{dataToProcess.length} rows")
 
         outBuffer = outBuffer.concat _.pluck(dataToProcess, 'row')
         dataToProcess = []
