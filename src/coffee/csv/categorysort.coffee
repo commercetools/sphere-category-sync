@@ -42,8 +42,6 @@ class CategorySort
     dataToProcess = []
 
     rows = fs.readFileSync(fileIn, "utf-8").split "\n"
-    if rows.length <= 1
-      return
 
     outBuffer.push(rows.shift())
     header = outBuffer[0].split(',')
