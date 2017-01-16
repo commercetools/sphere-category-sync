@@ -34,7 +34,7 @@ Feature: Export categories
     When I run `category-sync -p sphere-category-sync-test export -o no-template.csv`
     Then the exit status should be 0
     Then a file named "no-template.csv" should exist
-    And the file "no-template.csv" should match /^id,externalId,parentId,orderHint,createdAt,lastModifiedAt,name.de,description.de,slug.de,metaTitle.de,metaDescription.de,metaKeywords.de$/
+    And the file "no-template.csv" should match /^id,externalId,parentId,orderHint,createdAt,lastModifiedAt,name.en,description.en,slug.en,metaTitle.en,metaDescription.en,metaKeywords.en/
 
   Scenario: Use externalId for parentId during Export
     Given a file named "single.csv" with:
