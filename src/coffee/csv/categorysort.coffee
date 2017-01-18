@@ -32,7 +32,8 @@ class CategorySort
   sort: (fileIn, fileOut) ->
     new Promise (resolve, reject) =>
       outBuffer = []
-      processed = {}
+      endingRows = {}
+      beginningRows = {}
       insertPosition = 0
       parentId = undefined
       rowId = undefined
@@ -43,12 +44,13 @@ class CategorySort
             parentId = @getParentIdHeader data, cons.HEADER_PARENT_ID
           if not rowId
             rowId = @getRowId data
-          if data[parentId] and not processed[data[parentId]]
+          if data[parentId] and (not beginningRows[data[parentId]] or !endingRows[data[parentId]])
             outBuffer.push(data)
+            endingRows[data[rowId]] = true
           else
             outBuffer.splice(insertPosition, 0, data)
             insertPosition++
-          processed[data[rowId]] = true
+            beginningRows[data[rowId]] = true
         )
         .on('end', () ->
           keys = Object.keys(outBuffer[0])
@@ -56,6 +58,7 @@ class CategorySort
             header: true
             eof: false
           csvStringify(outBuffer, options, (err, output) ->
+            console.log(output, 'lol')
             fs.writeFileSync(fileOut, output, 'utf-8')
             resolve()
           )
