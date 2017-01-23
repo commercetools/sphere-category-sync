@@ -19,7 +19,7 @@ ddescribe 'CategorySort', ->
           expect(fs.readFileSync(resultFile, 'utf-8')).toEqual output.join('\n')
           done()
 
-    it 'should initialize', (done) ->
+    it 'should initialize', ->
       expect(@sorter).toBeDefined()
 
     it 'should sort an empty file', (done) ->
@@ -30,25 +30,21 @@ ddescribe 'CategorySort', ->
       input = ['id,parentId,externalId']
       runTest(input, input, @sorter, done)
 
-    it 'should sort a file by externalId', (done) ->
+    iit 'should sort a file by externalId', (done) ->
       input = [
         'id,externalId,parentId',
-        'c,3,1',
-        'd,4,3',
         'a,1,',
         'b,2,1',
-        'e,5,4',
-        'e,6,'
+        'd,4,3',
+        'c,3,2'
       ]
 
       expected = [
         'id,externalId,parentId',
-        'd,4,3',
         'a,1,',
         'b,2,1',
-        'e,5,4',
-        'e,6,',
-        'c,3,1'
+        'c,3,2',
+        'd,4,3'
       ]
 
       runTest(input, expected, @sorter, done)

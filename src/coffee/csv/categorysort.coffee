@@ -25,7 +25,7 @@ class CategorySort
     @getParentIdHeader data, parentBy
 
   getParentIdHeader: (data, colName=cons.HEADER_PARENT_ID) ->
-    if not data[colName]
+    if (typeof data[colName]) == 'undefined'
       throw new Error("CSV header does not have #{colName} column")
     colName
 
@@ -39,6 +39,7 @@ class CategorySort
       rowId = undefined
       fs.createReadStream(fileIn)
         .pipe(csv(strict:true))
+        .on('error', reject)
         .on('data', (data) =>
           if not parentId
             parentId = @getParentIdHeader data, cons.HEADER_PARENT_ID
