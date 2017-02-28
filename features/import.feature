@@ -1,6 +1,5 @@
 Feature: Import categories
 
-  @wip
   Scenario: Error on wrong file
     When I run `category-sync -p import-101-64 import -f not_here.csv`
     Then the exit status should be 1
