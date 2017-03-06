@@ -1,6 +1,6 @@
 _ = require 'underscore'
 Promise = require 'bluebird'
-CONS = require './csv/constants'
+CONS = require './constants'
 
 class Matcher
 
@@ -20,15 +20,14 @@ class Matcher
 
   initialize: (categories) ->
     @logger.info "Getting candidates: #{_.size categories}"
-    new Promise (resolve, reject) =>
-      externalIds = _.map categories, (category) ->
-        category.externalId
-      @apiClient.getByExternalIds(externalIds)
-      .then (result) =>
-        @currentCandidates = result.body.results
-        @logger.info "Found candidates: #{_.size @currentCandidates}"
-        resolve()
-      .catch (err) -> reject err
+    externalIds = _.map categories, (category) ->
+      category.externalId
+
+    @apiClient.getByExternalIds(externalIds)
+    .then (result) =>
+      @currentCandidates = result.body.results
+      @logger.info "Found candidates: #{_.size @currentCandidates}"
+      Promise.resolve()
 
   resolveParent: (category) ->
     new Promise (resolve, reject) =>
@@ -82,15 +81,18 @@ class Matcher
       @apiClient.byId parentByValue
 
   match: (category) ->
-    new Promise (resolve, reject) =>
-      cat = _.find @currentCandidates, (candidate) ->
+    cat = _.find @currentCandidates, (candidate) ->
+      if category.externalId
         candidate.externalId is category.externalId
-      if cat
-        @logger.info "Found match for externalId '#{cat.externalId}' with id '#{cat.id}'."
-        @addMapping cat
-      else
-        msg = "No match found for category with external id '#{category.externalId}'"
-        @logger.info msg
-      resolve cat
+      else if category.id
+        category.id is candidate.id
+
+    if cat
+      @logger.info "Found match for externalId '#{cat.externalId}' with id '#{cat.id}'."
+      @addMapping cat
+    else
+      msg = "No match found for category with external id '#{category.externalId}'"
+      @logger.info msg
+    Promise.resolve cat
 
 module.exports = Matcher

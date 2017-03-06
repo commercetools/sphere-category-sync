@@ -1,5 +1,5 @@
 _ = require 'underscore'
-Header = require '../../lib/csv/header'
+Header = require '../../lib/csvMapping/header'
 
 describe 'Header', ->
 
@@ -20,17 +20,3 @@ describe 'Header', ->
       expect(_.size errors).toBe 2
       expect(errors[0]).toBe "Header 'trailing ' contains a padding whitespace!"
       expect(errors[1]).toBe "Header ' prefix' contains a padding whitespace!"
-
-    it 'should call handleHeader for each header', ->
-      h = new Header [ 'id' ]
-      spyOn(h, 'handleHeader')
-      h.validate()
-      expect(h.handleHeader.callCount).toBe 1
-      expect(h.handleHeader).toHaveBeenCalledWith 'id', 0
-
-    it 'should call handleLanguageHeader for localized header', ->
-      h = new Header [ 'name.de' ]
-      spyOn(h, 'handleLanguageHeader')
-      h.validate()
-      expect(h.handleLanguageHeader.callCount).toBe 1
-      expect(h.handleLanguageHeader).toHaveBeenCalledWith 'name.de', 'name', 'de', 0

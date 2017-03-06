@@ -1,6 +1,5 @@
 Feature: Import categories
 
-  @wip
   Scenario: Error on wrong file
     When I run `category-sync -p sphere-category-sync-test import -f not_here.csv`
     Then the exit status should be 1

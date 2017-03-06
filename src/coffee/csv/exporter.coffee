@@ -4,9 +4,8 @@ fs = require 'fs'
 csv = require 'csv'
 stringify = require 'csv-stringify'
 transform = require 'stream-transform'
-CONS = require './constants'
-ExportMapping = require './exportmapping'
-Streaming = require '../streaming'
+CsvTemplate = require './template'
+ExportMapping = require '../csvMapping/out'
 {SphereClient} = require 'sphere-node-sdk'
 Promise = require 'bluebird'
 
@@ -14,79 +13,54 @@ class Exporter
 
   constructor: (@logger, @options = {}) ->
     @client = new SphereClient @options
+    @csvTemplate = new CsvTemplate @logger, @client
+    @mapping = null
+    @stream = null
 
-  loadTemplate: (fileName) ->
-    new Promise (resolve, reject) =>
-      parser = csv.parse
-        delimiter: ','
-        columns: (rawHeader) =>
-          @_initMapping rawHeader
-          rawHeader
-      parser.on 'error', (error) ->
-        reject error
-      parser.on 'finish', ->
-        resolve 'Header loaded.'
+  _processChunk: (chunk) ->
+    categories = chunk.body.results
+    @logger.info "Processing #{_.size categories} categories"
 
-      stream = fs.createReadStream fileName
-      stream.on 'error', (error) ->
-        reject error
+    rows = _.map categories, (category) =>
+      @mapping.map category
+    @_write rows
 
-      stream.pipe(parser)
-
-  _initMapping: (rawHeader) ->
-    @mapping = new ExportMapping rawHeader, @options
-    errors = @mapping.validate()
-    throw { errors } if _.size errors
-    @write [rawHeader] # pass array of array to ensure newline in CSV
-
-  defaultTemplate: ->
-    new Promise (resolve, reject) =>
-      header = CONS.BASE_HEADERS
-      @client.project.fetch()
-      .then (prj) =>
-        _.each prj.body.languages, (l) ->
-          header = header.concat _.map CONS.LOCALIZED_HEADERS, (h) ->
-            "#{h}.#{l}"
-
-        @_initMapping header
-        resolve 'Default header created'
-
-  run: (templateFileName, outPutFileName) ->
+  _exportCategories: (outPutFileName) ->
     new Promise (resolve, reject) =>
       @stream = fs.createWriteStream outPutFileName
+      @stream.on 'error', reject
       @stream.on 'finish', ->
         resolve 'Export done.'
-      @stream.on 'error', (error) ->
-        reject error
 
-      promise = if templateFileName
-        @loadTemplate templateFileName
-      else
-        @defaultTemplate()
+      @_write [@mapping.getTemplate()]
 
-      promise.catch (error) ->
-        reject error
-      .then =>
-
-        processChunk = (payload) =>
-          @logger.info "Processing #{_.size payload.body.results} categories"
-          new Promise (resolve, reject) =>
-            rows = _.map payload.body.results, (category) =>
-              row = @mapping.toCSV category
-            @write rows
-            .then (result) ->
-              resolve result
-
-        @client.categories
+      @client.categories
         .expand('parent')
-        .process(processChunk, {accumulate: false})
-        .then (result) =>
+        .process(
+          (res) => @_processChunk(res)
+        , {accumulate: false}
+        )
+        .then =>
           @stream.end()
 
-  write: (output) ->
+  _initMapping: (template) ->
+    @mapping = new ExportMapping template, @options
+    errors = @mapping.validate()
+    throw { errors } if _.size errors
+
+  run: (templateFileName, outPutFileName) ->
+    @csvTemplate.loadTemplate templateFileName
+    .then (template) =>
+      @_initMapping(template)
+    .then =>
+      @_exportCategories outPutFileName
+
+  _write: (output) ->
     new Promise (resolve, reject) =>
       stringify output, (err, out) =>
+        if err
+          return reject err
         @stream.write out
-        resolve 'OK'
+        resolve()
 
 module.exports = Exporter

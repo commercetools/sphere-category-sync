@@ -36,28 +36,28 @@ class Streaming
   _processBatches: (categories) =>
     @logger.info "Processing '#{_.size categories}' categor#{if _.size(categories) is 1 then 'y' else 'ies'}"
     @matcher.initialize(categories)
-    .then =>
-      Promise.map categories, (category) =>
-        @matcher.resolveParent(category)
-        .then (cat) =>
-          if cat
-            @matcher.match(cat)
-            .then (existingCategory) =>
-              if existingCategory
-                @apiClient.update(cat, existingCategory, @actionsToIgnore)
-              else
-                @apiClient.create(cat)
-                .then (result) =>
-                  # remember id of created category for faster parent match
-                  if result.body
-                    @matcher.addMapping result.body
-                    switch result.statusCode
-                      when 200 then @_summary.updated++
-                      when 201 then @_summary.created++
-                  else
-                    @logger.warn result
-                  Promise.resolve result
-      , {concurrency: 1} # 1 category at a time
+    .return categories
+    .map (category) =>
+      @matcher.resolveParent(category)
+      .then (cat) =>
+        if cat
+          @matcher.match(cat)
+          .then (existingCategory) =>
+            if existingCategory
+              @apiClient.update(cat, existingCategory, @actionsToIgnore)
+            else
+              @apiClient.create(cat)
+              .then (result) =>
+                # remember id of created category for faster parent match
+                if result.body
+                  @matcher.addMapping result.body
+                  switch result.statusCode
+                    when 200 then @_summary.updated++
+                    when 201 then @_summary.created++
+                else
+                  @logger.warn result
+                Promise.resolve result
+    , {concurrency: 1} # 1 category at a time
 
 
 module.exports = Streaming

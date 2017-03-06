@@ -1,5 +1,5 @@
 _ = require 'underscore'
-ImportMapping = require '../../lib/csv/importmapping'
+ImportMapping = require '../../lib/csvMapping/in'
 
 describe 'ImportMapping', ->
 
@@ -11,9 +11,7 @@ describe 'ImportMapping', ->
     it 'should map a simple entry', ->
       im = new ImportMapping [ 'id' ]
       im.validate()
-      expect(_.size im.index2JsonFn).toBe 1
-      expect(_.isFunction(im.index2JsonFn[0])).toBe true
-      json = im.toJSON
+      json = im.map
         id: 'foo'
       expect(json).toEqual
         id: 'foo'
@@ -21,9 +19,7 @@ describe 'ImportMapping', ->
     it 'should map parentId entry', ->
       im = new ImportMapping [ 'parentId' ]
       im.validate()
-      expect(_.size im.index2JsonFn).toBe 1
-      expect(_.isFunction(im.index2JsonFn[0])).toBe true
-      json = im.toJSON
+      json = im.map
         parentId: 'root'
       expect(json).toEqual
         parent:
@@ -32,18 +28,14 @@ describe 'ImportMapping', ->
     it 'should not map empty parentId entry', ->
       im = new ImportMapping [ 'parentId' ]
       im.validate()
-      expect(_.size im.index2JsonFn).toBe 1
-      expect(_.isFunction(im.index2JsonFn[0])).toBe true
-      json = im.toJSON
+      json = im.map
         parentId: ''
       expect(json).toEqual {}
 
     it 'should map a localized entry', ->
       im = new ImportMapping [ 'slug.it' ]
       im.validate()
-      expect(_.size im.index2JsonFn).toBe 1
-      expect(_.isFunction(im.index2JsonFn[0])).toBe true
-      json = im.toJSON
+      json = im.map
         'slug.it': 'ciao'
       expect(json).toEqual
         slug:

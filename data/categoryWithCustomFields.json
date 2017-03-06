@@ -1,0 +1,27 @@
+{
+  "name": {
+    "en": "Category1"
+  },
+  "slug": {
+    "en": "cat-1"
+  },
+  "externalId": "c1",
+  "custom": {
+    "type": {
+      "key": "custom-category"
+    },
+    "fields": {
+      "description": "custom field text",
+      "color": {
+        "cs": "červená",
+        "en": "red"
+      },
+      "money": {
+        "currencyCode": "EUR",
+        "centAmount":4200
+      },
+      "boolean": true,
+      "animals": "dog"
+    }
+  }
+}
