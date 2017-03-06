@@ -3,8 +3,9 @@ __ = require 'highland'
 fs = require 'fs'
 csv = require 'csv'
 transform = require 'stream-transform'
-ImportMapping = require './importmapping'
+ImportMapping = require '../csvMapping/in'
 Streaming = require '../streaming'
+CONS = require '../constants'
 Promise = require 'bluebird'
 
 class Importer
@@ -20,7 +21,7 @@ class Importer
         reject error
 
       parser = csv.parse
-        delimiter: ','
+        delimiter: CONS.CSV_DELIMITER
         columns: (rawHeader) =>
           @mapping = new ImportMapping rawHeader
           errors = @mapping.validate()
@@ -39,16 +40,16 @@ class Importer
       chunkSize = 1
       __(input).pipe(parser).pipe(transformer).pipe(
         transform (chunk, cb) =>
-          console.log "Process row: " + rowCount
+          @logger.info "Process row: " + rowCount
           @logger.debug 'chunk: ', chunk, {}
           @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
           rowCount = rowCount + chunkSize
         , {parallel: chunkSize})
 
   createCategory: (row) ->
-    @logger.debug 'create JSON category for row: ', row
-    json = @mapping.toJSON row
-    @logger.debug 'generated JSON category: ', json
+    @logger.debug 'Create JSON category for row: ', row
+    json = @mapping.map row
+    @logger.debug 'Generated JSON category: ', json
     json
 
 module.exports = Importer

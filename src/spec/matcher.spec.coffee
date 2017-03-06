@@ -1,7 +1,7 @@
 _ = require 'underscore'
 Matcher = require '../lib/matcher'
 Promise = require 'bluebird'
-CONS = require '../lib/csv/constants'
+CONS = require '../lib/constants'
 {ExtendedLogger} = require 'sphere-node-utils'
 
 describe 'Matcher', ->
@@ -26,13 +26,12 @@ describe 'Matcher', ->
     it 'should find a match after initialize', (done) ->
       apiClient =
         getByExternalIds: ->
-          new Promise (resolve, reject) ->
-            res =
-              body:
-                results: [
-                  { externalId: 'ex123', id: 'i123' }
-                ]
-            resolve res
+          res =
+            body:
+              results: [
+                { externalId: 'ex123', id: 'i123' }
+              ]
+          Promise.resolve res
       matcher = new Matcher(@logger, apiClient)
       category =
         externalId: 'ex123'
@@ -58,9 +57,9 @@ describe 'Matcher', ->
     it 'should not resolve parent for unkown parentId', (done) ->
       @matcher.parentBy = CONS.HEADER_EXTERNAL_ID
       @matcher.resolveParent { parent: { id: 'externalId123' } }
-      .then (result) ->
+      .then ->
         done 'Should not resolve if parentId not found'
-      .catch (err) ->
+      .catch ->
         done()
 
     it 'should resolve parent by externalId when mapping added before', (done) ->

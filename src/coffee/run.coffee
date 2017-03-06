@@ -82,11 +82,10 @@ ensureCredentials = (argv) ->
   else
     ProjectCredentialsConfig.create()
     .then (credentials) ->
-      Promise.resolve
-        config: credentials.enrichCredentials
-          project_key: argv.projectKey
-          client_id: argv.clientId
-          client_secret: argv.clientSecret
+      config: credentials.enrichCredentials
+        project_key: argv.projectKey
+        client_id: argv.clientId
+        client_secret: argv.clientSecret
 
 ensureCredentials(argv)
 .then (credentials) ->

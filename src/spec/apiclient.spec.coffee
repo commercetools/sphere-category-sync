@@ -44,9 +44,9 @@ describe 'ApiClient', ->
 
     it 'should reject promise on problems', (done) ->
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
-        new Promise (resolve, reject) -> reject({code: 500})
+        Promise.reject({code: 500})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
-      .then (r) ->
+      .then ->
         done("creation should end in error, but: #{res}")
       .catch (err) ->
         expect(err).toMatch /Error on creating new category/
@@ -54,7 +54,7 @@ describe 'ApiClient', ->
 
     it 'should reject promise on data problems', (done) ->
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
-        new Promise (resolve, reject) -> reject({code: 400})
+        Promise.reject({code: 400})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
       .then (res) ->
         done("creation should end in problem, but: #{res}")
@@ -65,7 +65,7 @@ describe 'ApiClient', ->
     it 'should resolve promise on data problems in continueOnProblems mode', (done) ->
       @apiClient.continueOnProblems = true
       spyOn(@apiClient.client.categories, 'create').andCallFake ->
-        new Promise (resolve, reject) -> reject({code: 400})
+        Promise.reject({code: 400})
       @apiClient.create({ name: 'myCat' }, { sourceInfo: 'row 7' })
       .then (res) ->
         expect(res).toMatch /ignored!/
@@ -130,12 +130,11 @@ describe 'ApiClient', ->
     it 'should filter action', (done) ->
       spyOn(@apiClient.client.categories, 'update').andCallFake -> Promise.resolve( { statusCode: 200 })
       @apiClient.update { name: 'myCat' }, { name: 'otherCat', orderHint: '0.1', version: 1 }, [ 'changeOrderHint' ]
-      .then (res) =>
+      .then =>
         expect(@apiClient.client.categories.update).toHaveBeenCalledWith { actions: [ { action: 'changeName', name: 'myCat' } ], version: 1 }
         done()
       .catch (err) ->
         done(err)
-
 
   describe '#delete', ->
     it 'should DELETE a category', ->
@@ -145,7 +144,7 @@ describe 'ApiClient', ->
 
     it 'should reject promise on deletion problems', (done) ->
       spyOn(@apiClient.client.categories, 'delete').andCallFake ->
-        new Promise (resolve, reject) -> reject({code: 400})
+        Promise.reject({code: 400})
       @apiClient.delete({ id: 'abc', version: 3 }, { sourceInfo: 'none' })
       .then (res) ->
         done("deletion should end in problem, but: #{res}")

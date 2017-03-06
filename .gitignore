@@ -11,3 +11,4 @@ coverage
 package
 .sphere-project-credentials
 .sphere/
+.idea
