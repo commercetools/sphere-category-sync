@@ -4,16 +4,27 @@ fs = require 'fs'
 csv = require 'csv'
 transform = require 'stream-transform'
 ImportMapping = require '../csvMapping/in'
+CategorySort = require './categorysort'
 Streaming = require '../streaming'
 CONS = require '../constants'
 Promise = require 'bluebird'
 
 class Importer
 
-  constructor: (@logger, options = {}) ->
-    @streaming = new Streaming @logger, options
+  constructor: (@logger, @options = {}) ->
+    @streaming = new Streaming @logger, @options
+
+  sortCategories: (fileName) ->
+    sortedFileName = fileName + '-sorted'
+    categorySort = new CategorySort(@logger, @options)
+    categorySort.sort fileName, sortedFileName
+    sortedFileName
 
   run: (fileName) ->
+
+    if @options.sort
+      fileName = @sortCategories(fileName)
+
     rowCount = 2
     new Promise (resolve, reject) =>
       input = fs.createReadStream fileName

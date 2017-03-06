@@ -4,6 +4,7 @@ src
 test
 tmp
 config.js
+.sphere-project-credentials
 coverage
 .travis.yml
 .coveralls.yml

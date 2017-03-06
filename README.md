@@ -52,6 +52,7 @@ Usage: bin/category-sync -p <project-key> import -f <CSV file>
 
 Options:
   -f, --file  CSV file name                          [required]
+  --sort      Sort CSV file before importing
 
 Examples:
   bin/category-sync -p my-project-42          Import categories from
@@ -62,6 +63,8 @@ Examples:
 During import we match categories to existing categories according to the `externalId`. If a category with the same `externalId` is found we will call it an update as the tool will then update the existing category properties - like name etc. - to those values defined in the CSV file.
 If no matching category is found the tool will create a new one.
 The `import` sub-command will never delete a category.
+
+When importing categories, the right order has to be provided to ensure that the category parent already exists before importing a category. For this purpose you can specify a `--sort` parameter which will preprocess categories and sort them before importing.
 
 ## Export
 

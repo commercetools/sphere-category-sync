@@ -1,5 +1,5 @@
 _ = require 'underscore'
-ImportMapping = require '../../lib/csvMapping/import'
+ImportMapping = require '../../lib/csvMapping/in'
 
 describe 'ImportMapping', ->
 

@@ -43,7 +43,6 @@ class Streaming
         if cat
           @matcher.match(cat)
           .then (existingCategory) =>
-            console.log(existingCategory)
             if existingCategory
               @apiClient.update(cat, existingCategory, @actionsToIgnore)
             else

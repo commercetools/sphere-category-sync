@@ -106,11 +106,15 @@ ensureCredentials(argv)
     .usage 'Usage: $0 -p <project-key> import -f <CSV file>'
     .example '$0 -p my-project-42 import -f categories.csv', 'Import categories from "categories.csv" file into SPHERE project with key "my-project-42".'
 
+    .describe 'sort', 'Sort categories by parentId before importing'
+
     .describe 'f', 'CSV file name'
     .nargs 'f', 1
     .alias 'f', 'file'
     .demand 'f'
     .argv
+
+    options.sort = argv.sort
 
     im = new Importer logger, options
     im.run argv.f

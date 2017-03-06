@@ -1,5 +1,5 @@
 _ = require 'underscore'
-ExportMapping = require '../../lib/csvMapping/export'
+ExportMapping = require '../../lib/csvMapping/out'
 
 describe 'ExportMapping', ->
 
