@@ -19,8 +19,3 @@ notifications:
     format: html
     on_success: change
     on_failure: change
-env:
-  global:
-  - secure: c3GzzEEiT7TVEjLgPAFOV5SXMG+X0M9j8iiyh1oGtKfRbp66uk3VyY2wEMivoGeJjodGAGyOMDla8Fl3/+37aOQ9QujsDKSvxo+kZVX0LQ5r5BFeIraH9Ln3jJFimGpfzQYA3yjvnfRVNOQEH6WVTBB8+G7w4kq77785oFbMxtI=
-  - secure: d8ZBYxVisrrgtCCGiOYspFthxuQHJrdsK1nXjMZqxUrepdIm6dOySu4fFUCY5rv4q1jFB0WtChmoyDuGacqFnXD432l/oQiTD4FN56wlovsFvrGQytO8ZcTB7R7JO+jhQFTA/CIu9mxhyeI739xzDzGh3ksYRmrlfCgPXVa0oAQ=
-  - secure: CxWNoBhePuKDpcqRofyZEqW2wSokE5lgq1C2VzZGQXnWLcBbxg4za7hS3azaKh1R9Psd/93ZcFMaSx7xyexE3bkueiMQHRZ7wzuwUkGkCoBy0gRPuFHCg4zp3AybzUbXQ/H0Cmr9h65VBMEWXqVuJJ9R0pcETcBQ+Gb1hgczFqc=
