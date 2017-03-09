@@ -4,6 +4,7 @@ branches:
   - latest
 node_js:
 - '4'
+- '6'
 before_script:
 - npm install -g grunt-cli
 - ./create_config.sh
