@@ -68,3 +68,59 @@ describe 'Streaming', ->
         @streaming.processStream chunk, =>
           expect(@streaming.summaryReport()).toEqual 'Summary: there were 2 imported categories (2 were new and 0 were updates)'
           done()
+
+  describe '#streaming', ->
+    it 'should import new category', (done) ->
+      newCategory = {
+        externalId: 'a',
+        slug: { en: 'slug' },
+        name: { en: 'name' },
+        description: { en: 'desc' }
+      }
+
+      @streaming.processStream [newCategory], =>
+        @streaming.apiClient.client.categories
+        .all()
+        .fetch()
+        .then (res) ->
+          list = res.body.results
+          expect(list.length).toBe 1
+
+          category = list[0]
+          expect(category.name).toEqual newCategory.name
+          expect(category.slug).toEqual newCategory.slug
+          expect(category.description).toEqual newCategory.description
+          expect(category.externalId).toEqual newCategory.externalId
+          done()
+
+    it 'should update category', (done) ->
+      newCategory = {
+        externalId: 'a',
+        slug: { en: 'slug' },
+        name: { en: 'name' },
+        description: { en: 'desc' }
+      }
+      updatedCategory = {
+        externalId: 'a',
+        slug: { en: 'slugUpdated' },
+        orderHint: '0.2937'
+      }
+
+      @streaming.processStream [newCategory], =>
+        @streaming.processStream [updatedCategory], =>
+
+          @streaming.apiClient.client.categories
+          .all()
+          .fetch()
+          .then (res) ->
+            list = res.body.results
+            expect(list.length).toBe 1
+
+            category = list[0]
+            expect(category.name).toEqual newCategory.name
+            expect(category.description).toEqual newCategory.description
+            expect(category.externalId).toEqual newCategory.externalId
+
+            expect(category.slug).toEqual updatedCategory.slug
+            expect(category.orderHint).toEqual updatedCategory.orderHint
+            done()
