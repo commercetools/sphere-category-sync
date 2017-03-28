@@ -42,7 +42,7 @@
     "debug": "2.2.0",
     "highland": "2.5.1",
     "lodash.merge": "^4.6.0",
-    "sphere-node-sdk": "1.7.0",
+    "sphere-node-sdk": "^1.18.0",
     "sphere-node-utils": "0.7.0",
     "stream-transform": "0.1.0",
     "underscore": "1.8.3",
