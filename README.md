@@ -1,10 +1,10 @@
-![SPHERE.IO icon](https://admin.sphere.io/assets/images/sphere_logo_rgb_long.png)
+![commercetools logo](https://cdn.rawgit.com/commercetools/press-kit/master/PNG/72DPI/CT%20logo%20horizontal%20RGB%2072dpi.png)
 
-# SPHERE.IO category sync
+# Category sync
 
 [![Build Status](https://travis-ci.org/sphereio/sphere-category-sync.png?branch=master)](https://travis-ci.org/sphereio/sphere-category-sync) [![Coverage Status](https://coveralls.io/repos/sphereio/sphere-category-sync/badge.png)](https://coveralls.io/r/sphereio/sphere-category-sync) [![Dependency Status](https://david-dm.org/sphereio/sphere-category-sync.png?theme=shields.io)](https://david-dm.org/sphereio/sphere-category-sync) [![devDependency Status](https://david-dm.org/sphereio/sphere-category-sync/dev-status.png?theme=shields.io)](https://david-dm.org/sphereio/sphere-category-sync#info=devDependencies)
 
-This component allows you to manage the category tree of your SPHERE.IO project by importing, updating and exporting categories via CSV files.
+This component allows you to manage the category tree of your commercetools project by importing, updating and exporting categories via CSV files.
 
 # Usage
 
