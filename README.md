@@ -136,7 +136,38 @@ Please note that there is no order in the header.
 
 ## JSON Format
 
-We support importing categories from JSON file. The import file should be in compliance with the schema defined [here](https://github.com/sphereio/sphere-json-schemas/blob/master/schema/category.schema.json)
+We support importing categories from JSON file. The import file should be in compliance with the following schema:
+```js
+{
+  "categories": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "externalId": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "/ltext"
+        },
+        "slug": {
+          "$ref": "/ltext"
+        },
+        "description": {
+          "$ref": "/ltext"
+        },
+        "orderHint": {
+          "type": "string"
+        },
+        "parent": {
+          "$ref": "/reference"
+        }
+      },
+      "required": ["name", "slug"]
+    }
+  }
+}
+```
 For importing JSON file, please use the [cli](https://github.com/sphereio/sphere-node-cli)
 Expected configuration options are:
 - language: (en / de) localization language
