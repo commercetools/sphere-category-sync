@@ -15,6 +15,7 @@ class Matcher
 
   addMapping: (category) ->
     @logger.info "Add mapping for exernalId: '#{category.externalId}' -> id: '#{category.id}'"
+    @existingIds.push category.id
     @externalId2IdMap[category.externalId] = category.id
     if category.slug
       @slug2IdMap[category.slug[@language]] = category.id
@@ -33,8 +34,7 @@ class Matcher
 
   resolveParent: (category) ->
     new Promise (resolve, reject) =>
-      _resolve = (cat, parentId) ->
-        @existingIds.push(parentId)
+      _resolve = (cat, parentId) =>
         cat.parent.id = parentId
         cat.parent.typeId = 'category'
         delete cat.parent._rawParentId

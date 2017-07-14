@@ -59,7 +59,7 @@ describe 'ApiClient', ->
       .then (res) ->
         done("creation should end in problem, but: #{res}")
       .catch (err) ->
-        expect(err).toMatch /Problem on creating new category/
+        expect(err).toMatch /Error on creating new category/
         done()
 
     it 'should resolve promise on data problems in continueOnProblems mode', (done) ->
