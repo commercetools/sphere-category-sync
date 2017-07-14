@@ -9,6 +9,7 @@ class Matcher
     @language = options.language
     @continueOnProblems = options.continueOnProblems
     @slug2IdMap = {}
+    @existingIds = []
     @externalId2IdMap = {}
     @currentCandidates = []
 
@@ -33,6 +34,7 @@ class Matcher
   resolveParent: (category) ->
     new Promise (resolve, reject) =>
       _resolve = (cat, parentId) ->
+        @existingIds.push(parentId)
         cat.parent.id = parentId
         cat.parent.typeId = 'category'
         delete cat.parent._rawParentId
@@ -49,6 +51,7 @@ class Matcher
           .then (result) =>
             if result.body.total is 1
               @logger.info "Found #{msgAppendix} - by fetching"
+
               _resolve category, result.body.results[0].id
             else
               msg = "Could not resolve #{msgAppendix}"
@@ -59,9 +62,7 @@ class Matcher
                 @logger.info msg
                 reject msg
           .catch (err) =>
-            msg = "Problem on resolving #{msgAppendix}: #{err}"
-            @logger.warn msg
-            reject msg
+            reject "Problem on resolving #{msgAppendix}: #{err}"
       else
         resolve category
 
@@ -70,7 +71,7 @@ class Matcher
       @slug2IdMap[parentByValue]
     else if @parentBy is CONS.HEADER_EXTERNAL_ID
       @externalId2IdMap[parentByValue]
-    else
+    else if @parentBy is CONS.HEADER_ID and @existingIds.indexOf(parentByValue) >= 0
       parentByValue
 
   fetchRef: (parentByValue) ->
@@ -79,7 +80,7 @@ class Matcher
     else if @parentBy is CONS.HEADER_EXTERNAL_ID
       @apiClient.getByExternalIds [parentByValue]
     else
-      @apiClient.byId parentByValue
+      @apiClient.getById parentByValue
 
   match: (category) ->
     new Promise (resolve, reject) =>
