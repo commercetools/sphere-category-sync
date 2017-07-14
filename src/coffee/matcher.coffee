@@ -34,7 +34,7 @@ class Matcher
 
   resolveParent: (category) ->
     new Promise (resolve, reject) =>
-      _resolve = (cat, parentId) =>
+      _resolve = (cat, parentId) ->
         cat.parent.id = parentId
         cat.parent.typeId = 'category'
         delete cat.parent._rawParentId
@@ -61,7 +61,7 @@ class Matcher
               else
                 @logger.info msg
                 reject msg
-          .catch (err) =>
+          .catch (err) ->
             reject "Problem on resolving #{msgAppendix}: #{err}"
       else
         resolve category
