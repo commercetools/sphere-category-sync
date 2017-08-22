@@ -6,10 +6,10 @@ Matcher = require './matcher'
 
 class Streaming
 
-  constructor: (@logger, options) ->
-    @apiClient = new ApiClient @logger, options
-    @matcher = new Matcher @logger, @apiClient, options
-    @actionsToIgnore = options.actionsToIgnore
+  constructor: (@logger, @options) ->
+    @apiClient = new ApiClient @logger, @options
+    @matcher = new Matcher @logger, @apiClient, @options
+    @actionsToIgnore = @options.actionsToIgnore
     @_resetSummary()
 
   _resetSummary: =>
@@ -30,8 +30,6 @@ class Streaming
     .then =>
       @logger.info 'Chunk of stream processed'
       cb()
-    .catch (err) =>
-      @logger.error err
 
   _processBatches: (categories) =>
     @logger.info "Processing '#{_.size categories}' categor#{if _.size(categories) is 1 then 'y' else 'ies'}"
@@ -57,6 +55,11 @@ class Streaming
                   else
                     @logger.warn result
                   Promise.resolve result
+        .catch (err) =>
+          if @options.continueOnProblems
+            @logger.error err
+          else
+            Promise.reject err
       , {concurrency: 1} # 1 category at a time
 
 

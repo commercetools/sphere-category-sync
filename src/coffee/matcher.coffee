@@ -9,11 +9,13 @@ class Matcher
     @language = options.language
     @continueOnProblems = options.continueOnProblems
     @slug2IdMap = {}
+    @existingIds = []
     @externalId2IdMap = {}
     @currentCandidates = []
 
   addMapping: (category) ->
     @logger.info "Add mapping for exernalId: '#{category.externalId}' -> id: '#{category.id}'"
+    @existingIds.push category.id
     @externalId2IdMap[category.externalId] = category.id
     if category.slug
       @slug2IdMap[category.slug[@language]] = category.id
@@ -49,6 +51,7 @@ class Matcher
           .then (result) =>
             if result.body.total is 1
               @logger.info "Found #{msgAppendix} - by fetching"
+
               _resolve category, result.body.results[0].id
             else
               msg = "Could not resolve #{msgAppendix}"
@@ -58,10 +61,8 @@ class Matcher
               else
                 @logger.info msg
                 reject msg
-          .catch (err) =>
-            msg = "Problem on resolving #{msgAppendix}: #{err}"
-            @logger.warn msg
-            reject msg
+          .catch (err) ->
+            reject "Problem on resolving #{msgAppendix}: #{err}"
       else
         resolve category
 
@@ -70,7 +71,7 @@ class Matcher
       @slug2IdMap[parentByValue]
     else if @parentBy is CONS.HEADER_EXTERNAL_ID
       @externalId2IdMap[parentByValue]
-    else
+    else if @parentBy is CONS.HEADER_ID and @existingIds.indexOf(parentByValue) >= 0
       parentByValue
 
   fetchRef: (parentByValue) ->
@@ -79,7 +80,7 @@ class Matcher
     else if @parentBy is CONS.HEADER_EXTERNAL_ID
       @apiClient.getByExternalIds [parentByValue]
     else
-      @apiClient.byId parentByValue
+      @apiClient.getById parentByValue
 
   match: (category) ->
     new Promise (resolve, reject) =>

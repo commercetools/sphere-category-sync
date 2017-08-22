@@ -53,6 +53,10 @@ class Importer
           console.log "Process row: " + rowCount
           @logger.debug 'chunk: ', chunk, {}
           @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
+          .catch (err) =>
+            @logger.error err
+            reject err
+
           rowCount = rowCount + chunkSize
         , {parallel: chunkSize})
 

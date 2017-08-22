@@ -5,6 +5,23 @@ package_json = require '../../package.json'
 Config = require '../../config'
 Promise = require 'bluebird'
 
+mockCategories = [
+  {
+    externalId: 'a',
+    slug: { en: 'category-a' },
+    name: { en: 'categoryA' },
+    description: { en: 'descA' }
+  },
+  {
+    externalId: 'a.a',
+    slug: { en: 'category-a-a' },
+    name: { en: 'categoryAA' },
+    description: { en: 'descAA' }
+    parent: { id: 'a22d6d8f-8d72-4806-bce0-d3bcf60aae60' }
+  }
+]
+
+
 cleanup = (logger, apiClient) ->
   apiClient.client.categories.where('parent is not defined').all().fetch()
   .then (result) ->
@@ -124,3 +141,61 @@ describe 'Streaming', ->
             expect(category.slug).toEqual updatedCategory.slug
             expect(category.orderHint).toEqual updatedCategory.orderHint
             done()
+
+    it 'should import category tree with slug as a parentBy param', (done) ->
+      categories = JSON.parse(JSON.stringify(mockCategories))
+      categories[1].parent.id = 'category-a'
+
+      @streaming.matcher.parentBy = 'slug'
+      @streaming.matcher.language = 'en'
+
+      @streaming.apiClient.client.categories
+      .create(categories[0])
+      .then =>
+        @streaming.processStream [categories[1]], =>
+          expect(@streaming._summary.created).toBe 1
+
+          @streaming.apiClient.client.categories
+            .all()
+            .fetch()
+            .then (res) ->
+              list = res.body.results
+              expect(list.length).toBe 2
+
+              categoryA = list.find (cat) -> cat.externalId is 'a'
+              categoryAA = list.find (cat) -> cat.externalId is 'a.a'
+              expect(categoryAA.parent.id).toBe categoryA.id
+              done()
+
+    it 'should import category tree with id as a parentBy param', (done) ->
+      categories = JSON.parse(JSON.stringify(mockCategories))
+
+      @streaming.matcher.parentBy = 'id'
+      @streaming.apiClient.client.categories
+        .create(categories[0])
+        .then (res) =>
+          categories[1].parent.id = res.body.id
+
+          @streaming.processStream [categories[1]], =>
+            expect(@streaming._summary.created).toBe 1
+            @streaming.apiClient.client.categories
+              .all()
+              .fetch()
+              .then (res) ->
+                list = res.body.results
+                expect(list.length).toBe 2
+
+                categoryA = list.find (cat) -> cat.externalId is 'a'
+                categoryAA = list.find (cat) -> cat.externalId is 'a.a'
+                expect(categoryAA.parent.id).toBe categoryA.id
+                done()
+
+    it 'should return an error when category parent was not resolved', (done) ->
+      categories = JSON.parse(JSON.stringify(mockCategories))
+
+      @streaming.matcher.parentBy = 'id'
+      @streaming.processStream categories, ->
+        done('Should log an error about an unresolved parent category')
+      .catch (err) ->
+        expect(err).toContain("Problem on resolving parent for '#{categories[1].parent.id}'")
+        done()

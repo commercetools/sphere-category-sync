@@ -6,7 +6,6 @@ stringify = require 'csv-stringify'
 transform = require 'stream-transform'
 CONS = require './constants'
 ExportMapping = require './exportmapping'
-Streaming = require '../streaming'
 {SphereClient} = require 'sphere-node-sdk'
 Promise = require 'bluebird'
 
@@ -40,7 +39,7 @@ class Exporter
     @write [rawHeader] # pass array of array to ensure newline in CSV
 
   defaultTemplate: ->
-    new Promise (resolve, reject) =>
+    new Promise (resolve) =>
       header = CONS.BASE_HEADERS
       @client.project.fetch()
       .then (prj) =>
@@ -70,7 +69,7 @@ class Exporter
 
         processChunk = (payload) =>
           @logger.info "Processing #{_.size payload.body.results} categories"
-          new Promise (resolve, reject) =>
+          new Promise (resolve) =>
             rows = _.map payload.body.results, (category) =>
               row = @mapping.toCSV category
             @write rows
@@ -80,11 +79,11 @@ class Exporter
         @client.categories
         .expand('parent')
         .process(processChunk, {accumulate: false})
-        .then (result) =>
+        .then =>
           @stream.end()
 
   write: (output) ->
-    new Promise (resolve, reject) =>
+    new Promise (resolve) =>
       stringify output, (err, out) =>
         @stream.write out
         resolve 'OK'

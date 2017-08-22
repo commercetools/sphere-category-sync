@@ -28,6 +28,15 @@ class ApiClient
     .where("slug(#{language} in (#{quotedSlugs.join(', ')}))")
     .fetch()
 
+  getById: (id) ->
+    @client.categories
+    .byId(id)
+    .fetch()
+    .then (res) ->
+      body:
+        total: 1
+        results: [res.body]
+
   update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
     category = loMerge({}, existingCategory, category)
     @logger.debug "performing update"
@@ -67,30 +76,25 @@ class ApiClient
 
   create: (category, context = {}) ->
     @logger.debug "performing create"
-    new Promise (resolve, reject) =>
-      if @dryRun
-        resolve "[#{context.sourceInfo}] DRY-RUN - create new category."
-      else if @updatesOnly
-        resolve "[#{context.sourceInfo}] UPDATES ONLY - nothing done."
-      else
-        @client.categories.create(category)
-        .then (result) ->
-          resolve result
-          if result.body.externalId
-            console.log "Category with externalId " + result.body.externalId + " created."
-          else
-            console.log "Category created."
-        .catch (err) =>
-          if err.code is 400
-            msg = "[#{context.sourceInfo}] Problem on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
-            if @continueOnProblems
-              resolve "#{msg} - ignored!"
-            else
-              reject msg
-          else
-            msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
-            @logger.error msg
-            reject msg
+
+    if @dryRun
+      Promise.resolve "[#{context.sourceInfo}] DRY-RUN - create new category."
+    else if @updatesOnly
+      Promise.resolve "[#{context.sourceInfo}] UPDATES ONLY - nothing done."
+    else
+      @client.categories.create(category)
+      .tap (result) ->
+        if result.body.externalId
+          console.log "Category with externalId " + result.body.externalId + " created."
+        else
+          console.log "Category created."
+      .catch (err) =>
+        msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
+        if err.code is 400 and @continueOnProblems
+          Promise.resolve "#{msg} - ignored!"
+        else
+          @logger.error msg
+          Promise.reject msg
 
   delete: (category, context = {}) ->
     new Promise (resolve, reject) =>
