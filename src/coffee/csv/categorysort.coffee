@@ -45,7 +45,8 @@ class CategorySort
 
     outBuffer.push(rows.shift())
     header = outBuffer[0].split(',')
-
+    console.log outBuffer, header
+    debugger
     # preprocess: parse id and parentIds
     rows.forEach (row) =>
       if row.length
@@ -79,7 +80,8 @@ class CategorySort
 
         outBuffer = outBuffer.concat _.pluck(dataToProcess, 'row')
         dataToProcess = []
-
+    debugger
+    console.log outBuffer
     fs.writeFileSync(fileOut, outBuffer.join('\n'), 'utf-8')
 
 module.exports = CategorySort
