@@ -63,7 +63,7 @@ Feature: Import categories
     Sub,slug2,sub42,root42
     Root,slug3,root42
     """
-    When I run `category-sync --continueOnProblems -p sphere-category-sync-test import -f loop.csv --verbose`
+    When I run `category-sync --continueOnProblems -p sphere-category-sync-test import -f loop.csv --sort false --verbose`
     Then the exit status should be 0
     And the output should contain "Could not resolve parent for 'sub42' using externalId (language: en). - ignored!"
     And the output should contain "Could not resolve parent for 'root42' using externalId (language: en). - ignored!"
@@ -75,4 +75,17 @@ Feature: Import categories
     Then the exit status should be 0
     And the output should contain "Found parent for 'sub42' using externalId"
     And the output should contain "Found parent for 'root42' using externalId"
+    And the output should contain "Import done."
+
+  Scenario: Sort by default
+    Given a file named "data.csv" with:
+    """
+    name.en,slug.en,externalId,parentId
+    Sub Sub,slug1,sub-sub42,sub42
+    Sub,slug2,sub42,root42
+    Root,slug3,root42
+    """
+    When I run `category-sync --continueOnProblems -p sphere-category-sync-test import -f data.csv --verbose`
+    Then the exit status should be 0
+    And the output should not contain "Could not resolve parent for"
     And the output should contain "Import done."
