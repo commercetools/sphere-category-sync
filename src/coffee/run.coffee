@@ -94,6 +94,7 @@ ensureCredentials(argv)
     language: language
     parentBy: parentBy
     continueOnProblems: continueOnProblems
+    sort: true
 
   options.host = argv.sphereHost if argv.sphereHost
   options.protocol = argv.sphereProtocol if argv.sphereProtocol
@@ -107,7 +108,7 @@ ensureCredentials(argv)
     .usage 'Usage: $0 -p <project-key> import -f <CSV file>'
     .example '$0 -p my-project-42 import -f categories.csv', 'Import categories from "categories.csv" file into SPHERE project with key "my-project-42".'
 
-    .describe 'sort', 'Sort categories by parentId before importing'
+    .describe 'sort true/false', 'Sort categories by parentId before importing (default: true)'
 
     .describe 'f', 'CSV file name'
     .nargs 'f', 1
@@ -115,7 +116,9 @@ ensureCredentials(argv)
     .demand 'f'
     .argv
 
-    options.sort = argv.sort
+    # Sort feature can be disabled by providing --sort false or --sort 0 param
+    if argv.sort == 'false' or argv.sort == 0
+      options.sort = false
 
     im = new Importer logger, options
     im.run argv.f
