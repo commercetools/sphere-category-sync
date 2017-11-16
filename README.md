@@ -52,7 +52,7 @@ Usage: bin/category-sync -p <project-key> import -f <CSV file>
 
 Options:
   -f, --file            CSV file name                          [required]
-  --sort true/false     Sort CSV file before importing (default: true)
+  --sort true/false     Sort CSV file before importing  [boolean] [default: true]
 
 Examples:
   bin/category-sync -p my-project-42          Import categories from
