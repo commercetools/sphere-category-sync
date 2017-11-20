@@ -11,6 +11,8 @@ class CategorySort
       language: @options.language
     }
 
+  # if defaultValue is set use it for missing column - for example when the parentBy
+  # is missing use empty string instead so the new categories as created as a root categories
   getValueByHeader: (row, header, colName, defaultValue) ->
     index = header.indexOf(colName)
     if index < 0
