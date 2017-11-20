@@ -103,11 +103,13 @@ ensureCredentials(argv)
   options.oauth_protocol = argv.sphereAuthProtocol if argv.sphereAuthProtocol
 
   if command is 'import'
-    yargs.reset()
+    args = yargs.reset()
     .usage 'Usage: $0 -p <project-key> import -f <CSV file>'
     .example '$0 -p my-project-42 import -f categories.csv', 'Import categories from "categories.csv" file into SPHERE project with key "my-project-42".'
 
-    .describe 'sort', 'Sort categories by parentId before importing'
+    .describe 'sort', 'Sort categories by parentId before importing.'
+    .boolean 'sort'
+    .default 'sort', true
 
     .describe 'f', 'CSV file name'
     .nargs 'f', 1
@@ -115,7 +117,8 @@ ensureCredentials(argv)
     .demand 'f'
     .argv
 
-    options.sort = argv.sort
+    # Sort feature can be disabled by providing --sort false or --sort 0 param
+    options.sort = args.sort
 
     im = new Importer logger, options
     im.run argv.f

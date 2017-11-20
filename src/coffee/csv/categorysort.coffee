@@ -11,10 +11,15 @@ class CategorySort
       language: @options.language
     }
 
-  getValueByHeader: (row, header, colName) ->
+  # if defaultValue is set use it for missing column - for example when the parentBy
+  # is missing use empty string instead so the new categories as created as a root categories
+  getValueByHeader: (row, header, colName, defaultValue) ->
     index = header.indexOf(colName)
     if index < 0
-      throw new Error("CSV header does not have #{colName} column")
+      if _.isUndefined defaultValue
+        throw new Error("CSV header does not have #{colName} column")
+      else
+        return defaultValue
     str.trim(row[index], '"')
 
   # will take externalId, id or slug.language (eg: slug.de) from csv row
@@ -25,13 +30,13 @@ class CategorySort
     if cons.HEADER_SLUG == parentBy
       parentBy = cons.HEADER_SLUG + '.' + @options.language
 
-    @getValueByHeader(row, header, parentBy)
+    @getValueByHeader(row, header, parentBy, '')
 
   parseRow: (row, header) ->
     parsed = row.split(',')
     {
       row: row,
-      parentId: @getValueByHeader(parsed, header, cons.HEADER_PARENT_ID),
+      parentId: @getValueByHeader(parsed, header, cons.HEADER_PARENT_ID, ''),
       rowId: @getRowId(parsed, header)
     }
 

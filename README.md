@@ -51,8 +51,8 @@ The command line to import or update categories is shown below:
 Usage: bin/category-sync -p <project-key> import -f <CSV file>
 
 Options:
-  -f, --file  CSV file name                          [required]
-  --sort      Sort CSV file before importing
+  -f, --file            CSV file name                          [required]
+  --sort true/false     Sort CSV file before importing  [boolean] [default: true]
 
 Examples:
   bin/category-sync -p my-project-42          Import categories from
