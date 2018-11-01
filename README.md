@@ -118,6 +118,7 @@ We support the following headers:
 - name: [localized name for the category](#localized-attributes)
 - description: [category's description in different languages](#localized-attributes)
 - slug: [internationalized slugs for the category](#localized-attributes)
+- key: key of the category defined by the user
 - externalId: id of the category defined by the user
 - parentId: id of the parent category - we reference other categories by `externalId` here
 - orderHint: a string that is used to order categories of the same parent. We recommend to use values between `0.1` and `0.9`.
