@@ -2,6 +2,7 @@ constants =
   HEADER_ROOT: 'root'
 
   HEADER_ID: 'id'
+  HEADER_KEY: 'key'
   HEADER_EXTERNAL_ID: 'externalId'
   HEADER_ORDER_HINT: 'orderHint'
   HEADER_PARENT_ID: 'parentId'
@@ -23,6 +24,7 @@ for name, value of constants
 
 exports.BASE_HEADERS = [
   constants.HEADER_ID
+  constants.HEADER_KEY
   constants.HEADER_EXTERNAL_ID
   constants.HEADER_PARENT_ID
   constants.HEADER_ORDER_HINT
