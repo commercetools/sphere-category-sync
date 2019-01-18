@@ -1,6 +1,6 @@
 {
   "name": "sphere-category-sync",
-  "description": "Import and export your category tree from/to your SPHERE.IO project.",
+  "description": "Import and export a category tree to and from a commercetools project.",
   "version": "1.1.1",
   "homepage": "https://github.com/sphereio/sphere-category-sync",
   "private": false,
@@ -15,6 +15,10 @@
   "bugs": {
     "url": "https://github.com/sphereio/sphere-category-sync/issues"
   },
+  "keywords": [
+        "commercetools",
+        "cli"
+    ],
   "licenses": [
     {
       "type": "MIT",
@@ -65,6 +69,5 @@
     "istanbul": "0.4.5",
     "jasmine-node": "github:daern91/jasmine-node",
     "sphere-coffeelint": "git://github.com/sphereio/sphere-coffeelint.git#master"
-  },
-  "keywords": []
+  }
 }
