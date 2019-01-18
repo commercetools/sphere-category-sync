@@ -69,6 +69,5 @@
     "istanbul": "0.4.5",
     "jasmine-node": "github:daern91/jasmine-node",
     "sphere-coffeelint": "git://github.com/sphereio/sphere-coffeelint.git#master"
-  },
-  "keywords": []
+  }
 }
