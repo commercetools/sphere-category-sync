@@ -1,3 +1,5 @@
+fs = require 'fs'
+path = require 'path'
 _ = require 'underscore'
 ExportMapping = require '../../lib/csv/exportmapping'
 
@@ -124,3 +126,25 @@ describe 'ExportMapping', ->
             slug:
               en: 'slug-4'
       expect(json).toEqual [ 'slug-4' ]
+
+  describe '#customFields', ->
+    it 'should map and export all customFields', ->
+      template = fs.readFileSync(path.join(__dirname, '../../data/customFieldsTemplate.csv'))
+        .toString()
+      categoryWithCustomFields = require(path.join(__dirname, '../../data/categoryWithCustomFields'))
+
+      ex = new ExportMapping template.split(',')
+      ex.validate()
+      json = ex.toCSV(categoryWithCustomFields)
+
+      expected = [
+        # key           externalId      slug.en             custom key        number  money
+        'tstcstfields', 'tstcstfields', 'cat-cust-fields', 'custom-type-key', 123, 'EUR 1234',
+        # lenum       set string  set of lenum keys                 set of lenum En labels
+        'lenumKey1', 'aaaa;bbbb', 'setOflenumKey1;setOflenumKey2', 'Lenum1En;Lenum2En',
+        # set of lenum de labels    string          set of enum keys              true    false
+        'SetLenum1De;SetLenum2De', 'string value', 'setOfEnumKey1;setOfEnumKey2', 'true', undefined,
+        # number enum key  lenum EN    lenum DE
+        '1;2;3', 'enumKey1', 'En value', 'De value'
+      ]
+      expect(json).toEqual expected
