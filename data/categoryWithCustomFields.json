@@ -78,6 +78,17 @@
             "inputHint": "SingleLine"
           },
           {
+            "name": "booleanAttrFalse",
+            "label": {
+              "en": "boolean attribute with false value"
+            },
+            "required": false,
+            "type": {
+              "name": "Boolean"
+            },
+            "inputHint": "SingleLine"
+          },
+          {
             "name": "stringAttr",
             "label": {
               "en": "string attribute"
