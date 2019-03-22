@@ -1,9 +1,10 @@
-_ = require 'underscore'
+_ = require 'lodash'
 __ = require 'highland'
 fs = require 'fs'
 csv = require 'csv'
 transform = require 'stream-transform'
 ImportMapping = require './importmapping'
+ApiClient = require '../apiclient'
 CategorySort = require './categorysort'
 Streaming = require '../streaming'
 Promise = require 'bluebird'
@@ -11,7 +12,9 @@ Promise = require 'bluebird'
 class Importer
 
   constructor: (@logger, @options = {}) ->
-    @streaming = new Streaming @logger, @options
+    @apiClient = new ApiClient @logger, @options
+    @streaming = new Streaming @logger, @options, @apiClient
+    @rowCount = 1
 
   sortCategories: (fileName) ->
     sortedFileName = fileName + '-sorted'
@@ -20,50 +23,73 @@ class Importer
     sortedFileName
 
   run: (fileName) ->
-
     if @options.sort
       fileName = @sortCategories(fileName)
 
-    rowCount = 2
+    parser = @_parseCsvStreamer()
+    createCategory = @_createCategoryStreamer()
+    importer = @_importCategoryStreamer()
+
+    readStream = fs.createReadStream(fileName)
+
     new Promise (resolve, reject) =>
-      input = fs.createReadStream fileName
-      input.on 'error', (error) ->
-        reject error
+      __(readStream)
+        .through(parser)
+        .through(createCategory)
+        .through(importer)
+        .stopOnError(reject)
+        .done ->
+          resolve('Import done.')
 
-      parser = csv.parse
-        delimiter: ','
-        columns: (rawHeader) =>
-          @mapping = new ImportMapping rawHeader
-          errors = @mapping.validate()
-          throw { errors } if _.size errors
-          rawHeader
-      parser.on 'error', (error) ->
-        reject error
-      parser.on 'finish', ->
-        resolve 'Import done.'
+  _parseCsvStreamer: () ->
+    csv.parse
+      delimiter: ','
+      relax_column_count: true
+      columns: (rawHeader) =>
+        @mapping = new ImportMapping rawHeader
+        errors = @mapping.validate()
+        throw { errors } if _.size errors
+        rawHeader
 
-      transformer = transform (row, callback) =>
-        category = @createCategory row
-        callback null, category
-      , {parallel: 10}
+  _createCategoryStreamer: () ->
+    transform (row, callback) =>
+      row = _.pickBy row, (val) -> val isnt ''
 
-      chunkSize = 1
-      __(input).pipe(parser).pipe(transformer).pipe(
-        transform (chunk, cb) =>
-          console.log "Process row: " + rowCount
-          @logger.debug 'chunk: ', chunk, {}
-          @streaming.processStream [ chunk ], cb # TODO: better passing of chunk
-          .catch (err) =>
-            @logger.error err
-            reject err
+      @createCategory row
+        .then (category) ->
+          callback null, category
+        .catch (err) ->
+          callback err
 
-          rowCount = rowCount + chunkSize
-        , {parallel: chunkSize})
+  _importCategoryStreamer: () ->
+    transform (chunk, cb) =>
+      @logger.debug 'chunk: ', chunk, {}
+      @streaming.processStream [ chunk ], () -> cb()
 
   createCategory: (row) ->
     @logger.debug 'create JSON category for row: ', row
-    json = @mapping.toJSON row
-    @logger.debug 'generated JSON category: ', json
-    json
+    @resolveReferences(row)
+      .then (row) =>
+        json = @mapping.toJSON row
+        @logger.debug 'generated JSON category: ', json
+        json
+
+  # Method will resolve references (eg customType by key) and mutates original csv row object
+  resolveReferences: (row) ->
+    Promise.resolve(row)
+      .then (row) =>
+        if not row.customType
+          return row
+
+        @resolveCustomType(row.customType)
+          .then (type) =>
+            if not type
+              Promise.reject("Type with key \"#{row.customType}\" was not found")
+            else
+              row.customType = type
+              row
+
+  resolveCustomType: (typeKey) ->
+    @apiClient.getCustomTypeByKey(typeKey)
 
 module.exports = Importer

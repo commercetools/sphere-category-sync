@@ -6,8 +6,8 @@ Matcher = require './matcher'
 
 class Streaming
 
-  constructor: (@logger, @options) ->
-    @apiClient = new ApiClient @logger, @options
+  constructor: (@logger, @options, @apiClient) ->
+    @apiClient = @apiClient or new ApiClient @logger, @options
     @matcher = new Matcher @logger, @apiClient, @options
     @actionsToIgnore = @options.actionsToIgnore
     @_resetSummary()

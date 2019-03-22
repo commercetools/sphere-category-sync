@@ -1,9 +1,9 @@
 _ = require 'underscore'
-Streaming = require '../../lib/streaming'
-{ExtendedLogger} = require 'sphere-node-utils'
-package_json = require '../../package.json'
-Config = require '../../config'
 Promise = require 'bluebird'
+Streaming = require '../../lib/streaming'
+Config = require '../../config'
+loggerUtils = require '../utils/logger'
+
 
 mockCategories = [
   {
@@ -21,7 +21,6 @@ mockCategories = [
   }
 ]
 
-
 cleanup = (logger, apiClient) ->
   apiClient.client.categories.where('parent is not defined').all().fetch()
   .then (result) ->
@@ -31,14 +30,8 @@ cleanup = (logger, apiClient) ->
 
 describe 'Streaming', ->
   beforeEach (done) ->
-    @logger = new ExtendedLogger
-      additionalFields:
-        project_key: Config.config.project_key
-      logConfig:
-        name: "#{package_json.name}-#{package_json.version}"
-        streams: [
-          { level: 'info', stream: process.stdout }
-        ]
+    @logger = loggerUtils.logger
+
     @streaming = new Streaming @logger,
       config: Config.config
       parentBy: 'externalId'

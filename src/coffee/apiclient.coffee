@@ -14,6 +14,8 @@ class ApiClient
     @updatesOnly = false
     @dryRun = false
 
+    @typesCacheByKey = {}
+
   getByExternalIds: (externalIds) ->
     quotedIds = _.map externalIds, (id) -> "\"#{id}\""
     @client.categories
@@ -37,8 +39,25 @@ class ApiClient
         total: 1
         results: [res.body]
 
-  update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
-    category = lodash.merge({}, existingCategory, category)
+  getCustomTypeByKey: (key) ->
+    if @typesCacheByKey[key] or @typesCacheByKey[key] is null
+      return @typesCacheByKey[key]
+
+    @client.types
+      .where("key=#{JSON.stringify(key)}")
+      .fetch()
+      .then (res) =>
+        @typesCacheByKey[key] = res.body.results[0] or null
+        @typesCacheByKey[key]
+
+  update: (categoryDraft, existingCategory, actionsToIgnore = [], context = {}) ->
+    category = lodash.merge({}, existingCategory, categoryDraft)
+
+    # preserve custom fields from original category draft
+    # so it won't merge custom array fields containing deleted objects
+    if categoryDraft.custom
+      category.custom = categoryDraft.custom
+
     @logger.debug "performing update"
     new Promise (resolve, reject) =>
       actionsToSync = @sync
@@ -83,18 +102,18 @@ class ApiClient
       Promise.resolve "[#{context.sourceInfo}] UPDATES ONLY - nothing done."
     else
       @client.categories.create(category)
-      .tap (result) ->
-        if result.body.externalId
-          console.log "Category with externalId " + result.body.externalId + " created."
-        else
-          console.log "Category created."
-      .catch (err) =>
-        msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
-        if err.code is 400 and @continueOnProblems
-          Promise.resolve "#{msg} - ignored!"
-        else
-          @logger.error msg
-          Promise.reject msg
+        .tap (result) ->
+          if result.body.externalId
+            console.log "Category with externalId " + result.body.externalId + " created."
+          else
+            console.log "Category created."
+        .catch (err) =>
+          msg = "[#{context.sourceInfo}] Error on creating new category:\n#{_.prettify err.body} - payload: #{_.prettify category}"
+          if err.code is 400 and @continueOnProblems
+            Promise.resolve "#{msg} - ignored!"
+          else
+            @logger.error msg
+            Promise.reject msg
 
   delete: (category, context = {}) ->
     new Promise (resolve, reject) =>
