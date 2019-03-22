@@ -28,7 +28,6 @@ class Importer
 
     parser = @_parseCsvStreamer()
     createCategory = @_createCategoryStreamer()
-    importer = @_importCategoryStreamer()
 
     readStream = fs.createReadStream(fileName)
 
@@ -36,7 +35,9 @@ class Importer
       __(readStream)
         .through(parser)
         .through(createCategory)
-        .through(importer)
+        .map (category) =>
+          __(@_importCategory(category))
+        .parallel(1) # import in series so it can create parents before its children
         .stopOnError(reject)
         .done ->
           resolve('Import done.')
@@ -61,10 +62,13 @@ class Importer
         .catch (err) ->
           callback err
 
-  _importCategoryStreamer: () ->
-    transform (chunk, cb) =>
-      @logger.debug 'chunk: ', chunk, {}
-      @streaming.processStream [ chunk ], () -> cb()
+  _importCategory: (category) ->
+    @streaming.processStream [ category ], _.noop
+      .catch (err) =>
+        if @options.continueOnProblems
+          @logger.warn err
+        else
+          throw err
 
   createCategory: (row) ->
     @logger.debug 'create JSON category for row: ', row

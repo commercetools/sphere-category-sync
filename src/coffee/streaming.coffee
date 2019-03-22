@@ -33,6 +33,7 @@ class Streaming
 
   _processBatches: (categories) =>
     @logger.info "Processing '#{_.size categories}' categor#{if _.size(categories) is 1 then 'y' else 'ies'}"
+
     @matcher.initialize(categories)
     .then =>
       Promise.map categories, (category) =>
@@ -61,6 +62,5 @@ class Streaming
           else
             Promise.reject err
       , {concurrency: 1} # 1 category at a time
-
 
 module.exports = Streaming
