@@ -40,7 +40,7 @@ Feature: Export categories
     Given a file named "single.csv" with:
     """
     externalId,name.de,slug.de,parentId
-    e-1,Foo,foo
+    e-1,Foo,foo,
     e-2,Bar,bar,e-1
     e-3,Baz,baz,e-1
     """
@@ -62,7 +62,7 @@ Feature: Export categories
     Given a file named "full.csv" with:
     """
     externalId,name.en,slug.en,description.en,metaTitle.en,metaDescription.en,metaKeywords.en,orderHint,parentId
-    exId1,Nice Stuff,nice-stuff,It's very nice stuff - bla bla,nice stuff,SEO magic for the nice stuff,nice;stuff,0.1
+    exId1,Nice Stuff,nice-stuff,It's very nice stuff - bla bla,nice stuff,SEO magic for the nice stuff,nice;stuff,0.1,
     exId2,Old Stuff,old-stuff,It's pretty old stuff - foo bar,old stuff,even more SEO magic needed for old stuff,stuff;old,0.9,exId1
     """
     When I run `category-sync -p sphere-category-sync-test import -f full.csv`

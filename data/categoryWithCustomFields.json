@@ -1,0 +1,294 @@
+{
+  "id": "9cafcdc0-c42b-4db2-83f1-ed50ace92f5a",
+  "version": 1,
+  "lastMessageSequenceNumber": 1,
+  "createdAt": "2019-02-28T13:30:29.525Z",
+  "lastModifiedAt": "2019-02-28T13:30:29.525Z",
+  "lastModifiedBy": {
+    "clientId": "sphere.impex.1.0",
+    "user": {
+      "typeId": "user",
+      "id": "13afec11-66cd-4c46-9e6d-d301ba5be33a"
+    }
+  },
+  "createdBy": {
+    "clientId": "sphere.impex.1.0",
+    "user": {
+      "typeId": "user",
+      "id": "13afec11-66cd-4c46-9e6d-d301ba5be33a"
+    }
+  },
+  "key": "tstcstfields",
+  "name": {
+    "en": "Test custom fields"
+  },
+  "slug": {
+    "en": "cat-cust-fields"
+  },
+  "description": {
+    "en": "Test custom fields"
+  },
+  "ancestors": [],
+  "orderHint": "0.000015513495520261015092564",
+  "externalId": "tstcstfields",
+  "custom": {
+    "type": {
+      "typeId": "type",
+      "id": "5524e1fe-be2a-4390-9a5f-0c971e7e4f41",
+      "obj": {
+        "id": "5524e1fe-be2a-4390-9a5f-0c971e7e4f41",
+        "version": 6,
+        "createdAt": "2019-02-28T09:36:10.824Z",
+        "lastModifiedAt": "2019-02-28T12:09:28.507Z",
+        "lastModifiedBy": {
+          "clientId": "sphere.impex.1.0",
+          "user": {
+            "typeId": "user",
+            "id": "13afec11-66cd-4c46-9e6d-d301ba5be33a"
+          }
+        },
+        "createdBy": {
+          "clientId": "sphere.impex.1.0",
+          "user": {
+            "typeId": "user",
+            "id": "13afec11-66cd-4c46-9e6d-d301ba5be33a"
+          }
+        },
+        "key": "custom-type-key",
+        "name": {
+          "en": "CustomTypeEn",
+          "de": "CustomTypeDe"
+        },
+        "description": {
+          "en": "Extending category object"
+        },
+        "resourceTypeIds": [
+          "category"
+        ],
+        "fieldDefinitions": [
+          {
+            "name": "booleanAttr",
+            "label": {
+              "en": "boolean attribute"
+            },
+            "required": false,
+            "type": {
+              "name": "Boolean"
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "stringAttr",
+            "label": {
+              "en": "string attribute"
+            },
+            "required": false,
+            "type": {
+              "name": "String"
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "ltextAttr",
+            "label": {
+              "en": "ltext attribute"
+            },
+            "required": false,
+            "type": {
+              "name": "LocalizedString"
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "moneyAttr",
+            "label": {
+              "en": "Money attribute"
+            },
+            "required": false,
+            "type": {
+              "name": "Money"
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "enumAttr",
+            "label": {
+              "en": "Enum attribute"
+            },
+            "required": false,
+            "type": {
+              "name": "Enum",
+              "values": [
+                {
+                  "key": "enumKey1",
+                  "label": "Enum1"
+                },
+                {
+                  "key": "enumKey2",
+                  "label": "Enum2"
+                }
+              ]
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "lenumAttr",
+            "label": {
+              "en": "Lenum attribute"
+            },
+            "required": false,
+            "type": {
+              "name": "LocalizedEnum",
+              "values": [
+                {
+                  "key": "lenumKey1",
+                  "label": {
+                    "en": "Lenum1En",
+                    "de": "Lenum1De"
+                  }
+                },
+                {
+                  "key": "lenumKey2",
+                  "label": {
+                    "en": "Lenum2En",
+                    "de": "Lenum2De"
+                  }
+                }
+              ]
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "setOfString",
+            "label": {
+              "en": "Set of String"
+            },
+            "required": false,
+            "type": {
+              "name": "Set",
+              "elementType": {
+                "name": "String"
+              }
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "number",
+            "label": {
+              "en": "Number"
+            },
+            "required": false,
+            "type": {
+              "name": "Number"
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "setOfNumber",
+            "label": {
+              "en": "Set of Number"
+            },
+            "required": false,
+            "type": {
+              "name": "Set",
+              "elementType": {
+                "name": "Number"
+              }
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "SetOfEnum",
+            "label": {
+              "en": "Set of Enum"
+            },
+            "required": false,
+            "type": {
+              "name": "Set",
+              "elementType": {
+                "name": "Enum",
+                "values": [
+                  {
+                    "key": "setOfEnumKey1",
+                    "label": "SetEnum1"
+                  },
+                  {
+                    "key": "setOfEnumKey2",
+                    "label": "SetEnum2"
+                  }
+                ]
+              }
+            },
+            "inputHint": "SingleLine"
+          },
+          {
+            "name": "SetOfLenum",
+            "label": {
+              "en": "Set of Lenum"
+            },
+            "required": false,
+            "type": {
+              "name": "Set",
+              "elementType": {
+                "name": "LocalizedEnum",
+                "values": [
+                  {
+                    "key": "setOflenumKey1",
+                    "label": {
+                      "en": "Lenum1En",
+                      "de": "SetLenum1De"
+                    }
+                  },
+                  {
+                    "key": "setOflenumKey2",
+                    "label": {
+                      "en": "Lenum2En",
+                      "de": "SetLenum2De"
+                    }
+                  }
+                ]
+              }
+            },
+            "inputHint": "SingleLine"
+          }
+        ]
+      }
+    },
+    "fields": {
+      "number": 123,
+      "moneyAttr": {
+        "fractionDigits": 2,
+        "centAmount": 1234,
+        "currencyCode": "EUR",
+        "type": "centPrecision"
+      },
+      "lenumAttr": "lenumKey1",
+      "setOfString": [
+        "aaaa",
+        "bbbb"
+      ],
+      "SetOfLenum": [
+        "setOflenumKey1",
+        "setOflenumKey2"
+      ],
+      "stringAttr": "string value",
+      "SetOfEnum": [
+        "setOfEnumKey1",
+        "setOfEnumKey2"
+      ],
+      "booleanAttr": true,
+      "booleanAttrFalse": false,
+      "setOfNumber": [
+        1,
+        2,
+        3
+      ],
+      "enumAttr": "enumKey1",
+      "ltextAttr": {
+        "en": "En value",
+        "de": "De value"
+      }
+    }
+  },
+  "assets": []
+}

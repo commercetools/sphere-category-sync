@@ -1,6 +1,6 @@
 _ = require 'underscore'
 _.mixin require 'underscore-mixins'
-loMerge = require 'lodash.merge'
+lodash = require 'lodash'
 Promise = require 'bluebird'
 {SphereClient, CategorySync} = require 'sphere-node-sdk'
 
@@ -38,7 +38,7 @@ class ApiClient
         results: [res.body]
 
   update: (category, existingCategory, actionsToIgnore = [], context = {}) ->
-    category = loMerge({}, existingCategory, category)
+    category = lodash.merge({}, existingCategory, category)
     @logger.debug "performing update"
     new Promise (resolve, reject) =>
       actionsToSync = @sync

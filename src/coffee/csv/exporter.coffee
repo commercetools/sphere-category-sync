@@ -71,13 +71,14 @@ class Exporter
           @logger.info "Processing #{_.size payload.body.results} categories"
           new Promise (resolve) =>
             rows = _.map payload.body.results, (category) =>
-              row = @mapping.toCSV category
+              @mapping.toCSV category
             @write rows
             .then (result) ->
               resolve result
 
         @client.categories
         .expand('parent')
+        .expand('custom.type')
         .process(processChunk, {accumulate: false})
         .then =>
           @stream.end()

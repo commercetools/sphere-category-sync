@@ -61,7 +61,7 @@ Feature: Import categories
     name.en,slug.en,externalId,parentId
     Sub Sub,slug1,sub-sub42,sub42
     Sub,slug2,sub42,root42
-    Root,slug3,root42
+    Root,slug3,root42,
     """
     When I run `category-sync --continueOnProblems -p sphere-category-sync-test import -f loop.csv --sort false --verbose`
     Then the exit status should be 0
@@ -83,7 +83,7 @@ Feature: Import categories
     name.en,slug.en,externalId,parentId
     Sub Sub,slug1,sub-sub42,sub42
     Sub,slug2,sub42,root42
-    Root,slug3,root42
+    Root,slug3,root42,
     """
     When I run `category-sync --continueOnProblems -p sphere-category-sync-test import -f data.csv --verbose`
     Then the exit status should be 0

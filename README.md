@@ -125,6 +125,7 @@ We support the following headers:
 - metaTitle: [localized title of category for search engines](#localized-attributes)
 - metaDescription: [localized description to be used by search engines](#localized-attributes)
 - metaKeywords: [localized SEO keywords for the category](#localized-attributes)
+- custom: [custom fields](#custom-fields)
 
 Further you might use the following header during export:
 - id: id of category in SPHERE.IO
@@ -184,6 +185,19 @@ A sample cli command is as follows:
 ### Localized attributes
 
 Different languages for the same attribute are defined by a suffix to the actual header delimited by a `.` - examples are `name.de` or `slug.en`. You may define as many languages as you want for those attributes.
+
+### Custom fields
+This module can also export custom fields from [category object](https://docs.commercetools.com/http-api-projects-categories#category).
+When given the following template, exporter will store `custom.type.key` in a `customType` column and `customField.*` columns will be filled with corresponding custom fields.
+```csv
+key,slug.en,customType,customField.number,customField.moneyAttr
+```
+Output:
+```csv
+categoryKey,categorySlugEn,customTypeKey,123,9876 EUR
+```
+
+More advanced CSV template for exporting custom fields can be found [here](./data/customFieldsTemplate.csv).
 
 # Setup
 
