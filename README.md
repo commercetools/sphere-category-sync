@@ -66,6 +66,17 @@ The `import` sub-command will never delete a category.
 
 When importing categories, the right order has to be provided to ensure that the category parent already exists before importing a category. For this purpose you can specify a `--sort` parameter which will preprocess categories and sort them before importing.
 
+### Importing custom fields
+This tool can import also category custom fields. First, the [CTP API type](https://docs.commercetools.com/http-api-projects-types) with custom field definitions has to be created. Example `type` can look like [this](/data/customTypeSchema.json).
+
+After the `type` was created, category with custom fields can be imported:
+```csv
+name.en,key,externalId,slug.en,customType,customField.number
+categoryName,categoryKeys,categoryExternalId,category-en-slug,customTypeKey,123
+```
+
+More detailed example of CSV with various custom fields can be found [here](/data/exportWithCustomFields.csv).   
+
 ## Export
 
 To export categories, you can pass a CSV file as template. The template needs to contain only the header.
