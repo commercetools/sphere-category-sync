@@ -43,7 +43,7 @@
     "@commercetools/product-json-to-csv": "^3.0.2",
     "bluebird": "3.5.3",
     "csv": "5.1.1",
-    "csv-stringify": "5 .3.0",
+    "csv-stringify": "5.3.0",
     "highland": "2.13.3",
     "lodash": "^4.17.11",
     "sphere-node-sdk": "2.4.1",
