@@ -19,7 +19,17 @@ class ImportMapping extends Header
     if row.customType
       @assembleCustomFields json, row, row.customType
 
+    else if @_hasCustomFields(row)
+      throw new Error('Custom fields were provided without customType property.')
+
     json
+
+  _hasCustomFields: (row) ->
+    customFieldsKey = Object
+      .keys(row)
+      .find (key) => key.startsWith(@customFieldsPrefix)
+
+    !!customFieldsKey # create true/false from customFIelds key if it was found
 
   handleLanguageHeader: (header, attribName, language, index) ->
     @index2JsonFn[index] = (row, json) ->
