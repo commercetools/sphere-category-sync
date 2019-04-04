@@ -80,18 +80,16 @@ class Importer
 
   # Method will resolve references (eg customType by key) and mutates original csv row object
   resolveReferences: (row) ->
-    Promise.resolve(row)
-      .then (row) =>
-        if not row.customType
-          return row
-
-        @resolveCustomType(row.customType)
-          .then (type) =>
-            if not type
-              Promise.reject("Type with key \"#{row.customType}\" was not found")
-            else
-              row.customType = type
-              row
+    if not row.customType
+      return Promise.resolve(row)
+    else
+      @resolveCustomType(row.customType)
+        .then (type) =>
+          if not type
+            Promise.reject("Type with key \"#{row.customType}\" was not found")
+          else
+            row.customType = type
+            row
 
   resolveCustomType: (typeKey) ->
     @apiClient.getCustomTypeByKey(typeKey)

@@ -69,7 +69,7 @@ When importing categories, the right order has to be provided to ensure that the
 ### Importing custom fields
 This tool can import also category custom fields. First, the [CTP API type](https://docs.commercetools.com/http-api-projects-types) with custom field definitions has to be created. Example `type` can look like [this](/data/customTypeSchema.json).
 
-After the `type` was created, category with custom fields can be imported:
+After the `type` has been created, categories with custom fields can be imported:
 ```csv
 name.en,key,externalId,slug.en,customType,customField.number
 categoryName,categoryKeys,categoryExternalId,category-en-slug,customTypeKey,123
