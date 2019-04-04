@@ -27,7 +27,7 @@ class ImportMapping extends Header
   _hasCustomFields: (row) ->
     Object
       .keys(row)
-      .some (key) -> key.startsWith @customFieldsPrefix
+      .some (key) => key.startsWith @customFieldsPrefix
 
   handleLanguageHeader: (header, attribName, language, index) ->
     @index2JsonFn[index] = (row, json) ->
