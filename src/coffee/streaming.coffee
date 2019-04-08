@@ -6,8 +6,8 @@ Matcher = require './matcher'
 
 class Streaming
 
-  constructor: (@logger, @options) ->
-    @apiClient = new ApiClient @logger, @options
+  constructor: (@logger, @options, @apiClient) ->
+    @apiClient = @apiClient or new ApiClient @logger, @options
     @matcher = new Matcher @logger, @apiClient, @options
     @actionsToIgnore = @options.actionsToIgnore
     @_resetSummary()
@@ -33,6 +33,7 @@ class Streaming
 
   _processBatches: (categories) =>
     @logger.info "Processing '#{_.size categories}' categor#{if _.size(categories) is 1 then 'y' else 'ies'}"
+
     @matcher.initialize(categories)
     .then =>
       Promise.map categories, (category) =>
@@ -61,6 +62,5 @@ class Streaming
           else
             Promise.reject err
       , {concurrency: 1} # 1 category at a time
-
 
 module.exports = Streaming

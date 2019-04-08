@@ -56,10 +56,9 @@ class Matcher
             else
               msg = "Could not resolve #{msgAppendix}"
               if @continueOnProblems
-                @logger.info "#{msg} - ignored!"
+                @logger.warn "#{msg} - ignored!"
                 resolve()
               else
-                @logger.info msg
                 reject msg
           .catch (err) ->
             reject "Problem on resolving #{msgAppendix}: #{err}"

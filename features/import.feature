@@ -35,8 +35,8 @@ Feature: Import categories
     name.en,slug.en,parentId
     Root Category,root-slug,
     Sub Category,sub-category-slug,root-slug
-    Sub Sub Category 1,x,sub-category-slug
-    Sub Sub Category 2,y,sub-category-slug
+    Sub Sub Category 1,xx,sub-category-slug
+    Sub Sub Category 2,yy,sub-category-slug
     """
     When I run `category-sync -p sphere-category-sync-test import --parentBy slug -f import-by-slug.csv --verbose`
     Then the exit status should be 0

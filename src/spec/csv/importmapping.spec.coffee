@@ -1,4 +1,6 @@
 _ = require 'underscore'
+fs = require 'fs'
+path = require 'path'
 ImportMapping = require '../../lib/csv/importmapping'
 
 describe 'ImportMapping', ->
@@ -48,3 +50,55 @@ describe 'ImportMapping', ->
       expect(json).toEqual
         slug:
           it: 'ciao'
+
+    it 'should map custom fields', ->
+      csvRowObject = require('../data/csvRowObjectWithCustomType')
+
+      im = new ImportMapping Object.keys(csvRowObject)
+      im.validate()
+
+      json = im.toJSON csvRowObject
+      expect(json).toEqual {
+        name: {
+          en: 'categoryName'
+        },
+        key: 'categoryKeys',
+        externalId: 'categoryExternalId',
+        slug: {
+          en: 'category-en-slug'
+        },
+        custom: {
+          type: {
+            typeId: 'type',
+            id: 'bcb4f88a-bd42-4478-bf20-9a6ad4936e2e'
+          },
+          fields: {
+            booleanAttr: true,
+            stringAttr: 'string value',
+            ltextAttr: {
+              en: 'En value',
+              de: 'De value'
+            },
+            moneyAttr: {
+              currencyCode: 'EUR',
+              centAmount: 1234,
+              fractionDigits: 2,
+              type: 'centPrecision'
+            },
+            enumAttr: 'enumKey1',
+            lenumAttr: 'lenumKey1',
+            setOfString: ['setOfStringVal1', 'setOfStringVal2'],
+            setOfLtext: [{
+              en: 'setLtextEn1',
+              de: 'setLtextDe1'
+            }, {
+              en: 'setLtextEn2',
+              de: 'setLtextDe2'
+            }],
+            number: 123,
+            setOfNumber: [1, 2, 3],
+            SetOfEnum: ['setOfEnumKey1', 'setOfEnumKey2'],
+            SetOfLenum: ['setOflenumKey1', 'setOflenumKey2']
+          }
+        }
+      }
