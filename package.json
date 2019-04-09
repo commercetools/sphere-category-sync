@@ -1,7 +1,7 @@
 {
   "name": "sphere-category-sync",
   "description": "Import and export a category tree to and from a commercetools project.",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "homepage": "https://github.com/sphereio/sphere-category-sync",
   "private": false,
   "author": {
