@@ -41,7 +41,7 @@ class ApiClient
 
   getCustomTypeByKey: (key) ->
     if @typesCacheByKey[key] or @typesCacheByKey[key] is null
-      return @typesCacheByKey[key]
+      return Promise.resolve(@typesCacheByKey[key])
 
     @client.types
       .where("key=#{JSON.stringify(key)}")

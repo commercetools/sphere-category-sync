@@ -27,14 +27,12 @@ class Importer
       fileName = @sortCategories(fileName)
 
     parser = @_parseCsvStreamer()
-    createCategory = @_createCategoryStreamer()
 
     readStream = fs.createReadStream(fileName)
 
     new Promise (resolve, reject) =>
       __(readStream)
         .through(parser)
-        .through(createCategory)
         .map (category) =>
           __(@_importCategory(category))
         .parallel(1) # import in series so it can create parents before its children
@@ -52,18 +50,12 @@ class Importer
         throw { errors } if _.size errors
         rawHeader
 
-  _createCategoryStreamer: () ->
-    transform (row, callback) =>
-      row = _.pickBy row, (val) -> val isnt ''
 
-      @createCategory row
-        .then (category) ->
-          callback null, category
-        .catch (err) ->
-          callback err
-
-  _importCategory: (category) ->
-    @streaming.processStream [ category ], _.noop
+  _importCategory: (categoryRow) ->
+    categoryRow = _.pickBy categoryRow, (val) -> val isnt ''
+    @createCategory categoryRow
+      .then (category) =>
+        @streaming.processStream [ category ], _.noop
       .catch (err) =>
         if @options.continueOnProblems
           @logger.warn err
