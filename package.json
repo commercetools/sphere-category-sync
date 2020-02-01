@@ -47,7 +47,7 @@
     "highland": "2.13.5",
     "lodash": "^4.17.11",
     "sphere-node-sdk": "2.5.1",
-    "sphere-node-utils": "1.0.3",
+    "sphere-node-utils": "2.0.1",
     "stream-transform": "1.0.8",
     "underscore": "1.9.2",
     "underscore-mixins": "0.1.4",
