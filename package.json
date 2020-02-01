@@ -49,7 +49,7 @@
     "sphere-node-sdk": "2.5.1",
     "sphere-node-utils": "1.0.3",
     "stream-transform": "1.0.8",
-    "underscore": "1.9.1",
+    "underscore": "1.9.2",
     "underscore-mixins": "0.1.4",
     "underscore.string": "3.3.5",
     "yargs": "13.3.0"
