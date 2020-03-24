@@ -46,7 +46,7 @@
     "csv-stringify": "5.3.6",
     "highland": "2.13.5",
     "lodash": "^4.17.11",
-    "sphere-node-sdk": "2.5.1",
+    "sphere-node-sdk": "3.2.2",
     "sphere-node-utils": "1.0.3",
     "stream-transform": "1.0.8",
     "underscore": "1.9.2",
