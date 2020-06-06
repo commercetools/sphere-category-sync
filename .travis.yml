@@ -11,7 +11,7 @@ before_script:
 - gem install cucumber aruba
 script:
 - npm test
-- cucumber -t ~@wip
+- cucumber --tags "not @wip"
 notifications:
   hipchat:
     rooms:
