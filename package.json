@@ -48,7 +48,7 @@
     "lodash": "^4.17.11",
     "sphere-node-sdk": "3.2.2",
     "sphere-node-utils": "2.0.1",
-    "stream-transform": "1.0.8",
+    "stream-transform": "2.0.2",
     "underscore": "1.10.2",
     "underscore-mixins": "0.1.4",
     "underscore.string": "3.3.5",
