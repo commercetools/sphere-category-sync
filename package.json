@@ -55,7 +55,7 @@
     "yargs": "13.3.2"
   },
   "devDependencies": {
-    "coffeelint": "^1.15.7",
+    "coffeelint": "^2.0.0",
     "coveralls": "^3.0.2",
     "grunt": "^1.0.3",
     "grunt-bump": "0.8.0",
