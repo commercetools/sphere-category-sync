@@ -52,7 +52,7 @@
     "underscore": "1.10.2",
     "underscore-mixins": "0.1.4",
     "underscore.string": "3.3.5",
-    "yargs": "13.3.2"
+    "yargs": "15.4.1"
   },
   "devDependencies": {
     "coffeelint": "^1.15.7",
