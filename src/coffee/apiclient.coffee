@@ -63,6 +63,8 @@ class ApiClient
       actionsToSync = @sync
       .buildActions(category, existingCategory)
       .filterActions (action) ->
+        not (action.description and Object.keys(action.description).length == 0) and
+        not (action.description and Object.values(action.description).every((a) -> !a)) and
         not _.contains(actionsToIgnore, action.action)
 
       @logger.debug "Actions to sync: ", actionsToSync.getUpdateActions()
