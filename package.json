@@ -40,7 +40,7 @@
     "release": "grunt release"
   },
   "dependencies": {
-    "@commercetools/product-json-to-csv": "^3.0.2",
+    "@commercetools/product-json-to-csv": "^6.0.0",
     "bluebird": "3.7.2",
     "csv": "5.3.2",
     "csv-stringify": "5.5.0",
